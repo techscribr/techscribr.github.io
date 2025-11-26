@@ -9,14 +9,14 @@ theme: jekyll-theme-chirpy
 lang: en
 
 # Change to your timezone › https://zones.arilyn.cc
-timezone:
+timezone: Asia/Kolkata
 
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
 title: TechScribr # the main title
 
-tagline: A cozy space to share insights about ML algorithms
+tagline: Demystifying ML concepts through clear explanations and practical insights
 
 description: >- # used by seo meta and the atom feed
   TechScribr is a blog dedicated to sharing insights, tutorials, and updates on machine learning algorithms and their applications.
