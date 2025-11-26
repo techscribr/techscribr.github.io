@@ -2,7 +2,7 @@
 title: "All about Linear Regression"
 date: 2025-11-05 11:30:00 +0530
 categories: [Machine Learning]
-tags: [ML, LinearRegression]
+tags: [ML, Regression]
 math: true
 ---
 
@@ -1159,3 +1159,114 @@ This probabilistic view explains the *behavior* we see in these models:
 | **OLS (Vanilla)** | Maximize Likelihood (MLE) | **Uniform / Flat** (No prior belief) | We assume all weight values are equally probable before seeing data. |
 | **Ridge (L2)** | Maximize Posterior (MAP) | **Gaussian (Normal)** | We assume weights are likely small and distributed normally around zero. |
 | **Lasso (L1)** | Maximize Posterior (MAP) | **Laplace** | We assume weights are likely to be exactly zero (sparsity). |
+
+
+## 13. How do we interpret the coefficients in linear regression?
+Interpreting coefficients is the bridge between a mathematical model and real-world actionable insights. However, this interpretation is fragile—it completely relies on specific conditions being met.
+
+Here is the breakdown of how to read them and the strict rules required to trust them.
+
+### 1. How to Interpret the Coefficients ($\beta$)
+
+The interpretation depends on whether the feature (independent variable) is continuous or categorical.
+
+Let's use a standard housing price model equation:
+$$\text{Price} = \beta_0 + \beta_1(\text{SqFt}) + \beta_2(\text{HasGarage}) + \epsilon$$
+
+#### A. Continuous Variables (e.g., `SqFt`)
+If $\beta_1 = 50$:
+* **The Interpretation:** "For every **1 unit increase** in Square Footage, the Price increases by **$50**, *holding all other variables constant*."
+* **Key Phrase:** The phrase "holding all other variables constant" (ceteris paribus) is mandatory. It means this is the isolated effect of size, assuming the house doesn't also gain a garage or change location.
+
+#### B. Categorical/Binary Variables (e.g., `HasGarage`: 0 or 1)
+If $\beta_2 = 15,000$:
+* **The Interpretation:** "A house **with** a garage (value 1) costs **$15,000 more** than a house **without** a garage (value 0), *holding all other variables constant*."
+* **Note:** This is always a comparison against the "baseline" (where the value is 0).
+
+#### C. The Intercept ($\beta_0$)
+If $\beta_0 = 30,000$:
+* **The Interpretation:** "The predicted Price when **all independent variables are zero**."
+* **Reality Check:** Often, the intercept has no physical meaning (e.g., a house with 0 SqFt cannot exist). It is primarily there to anchor the regression line.
+
+
+## 14. If $\beta_1 \gt \beta_2$, can we say $x_1$ is a more important feature compared to $x_2$?
+**The short answer is NO.**
+
+You cannot determine feature importance by simply comparing the raw values of the coefficients ($\beta_1$ vs $\beta_2$).
+
+Here is the detailed explanation of why this is a trap and how to correctly compare them.
+
+### 1. The Trap: The Scale of the Features
+The size of a coefficient depends entirely on the **units** (or scale) of the corresponding feature variable.
+
+**The Example:**
+Imagine we are predicting the **Price of a House**.
+* $x_1$: Size of the house in **Square Feet**.
+* $x_2$: Distance to the nearest school in **Kilometers**.
+
+Let's look at two scenarios representing the **exact same physical reality**:
+
+**Scenario A:**
+* **$x_1$ (Size):** Measured in **Square Feet**.
+    * Coefficient $\beta_1 = 100$ (Price increases $100 per sq ft).
+* **$x_2$ (Distance):** Measured in **Meters**.
+    * Coefficient $\beta_2 = -5$ (Price drops $5 per meter away).
+
+**Comparison:** $\beta_1 (100) > \beta_2 (-5)$.
+**Conclusion:** You might think "Size is more important."
+
+**Scenario B:**
+Now, let's just change the unit of measurement for distance.
+* **$x_1$ (Size):** Measured in **Square Feet**.
+    * Coefficient $\beta_1 = 100$.
+* **$x_2$ (Distance):** Measured in **Kilometers** (1 km = 1000 meters).
+    * Since 1 km is 1000x larger than 1 meter, the coefficient must be 1000x larger to have the same effect.
+    * Coefficient $\beta_2 = -5000$ (Price drops $5000 per km away).
+
+**Comparison:** $|\beta_2| (5000) \gg \beta_1 (100)$.
+**Conclusion:** Now it looks like "Distance is vastly more important."
+
+**The Reality:** The underlying importance of the feature didn't change; only the units did. Therefore, raw coefficients are meaningless for comparison.
+
+### 2. The Solution: Standardized Coefficients
+
+To compare $\beta_1$ and $\beta_2$ fairly, you must **standardize** your features (scale them) before training the model.
+
+Standardization puts all features on the same playing field (usually Mean = 0, Standard Deviation = 1).
+
+$$z = \frac{x - \mu}{\sigma}$$
+
+If you train a regression model on these **standardized features**:
+1.  The units (feet, meters, years) disappear.
+2.  The coefficients represents the change in Y given a **1 standard deviation increase** in X.
+3.  **Result:** You **CAN** compare these coefficients. If $\lvert \beta_{std, 1} \rvert > \lvert \beta_{std, 2} \rvert$, then $x_1$ is indeed a more influential feature than $x_2$.
+
+### 3. The Other Trap: Statistical Significance
+
+Even if you standardize your data, there is one more catch.
+
+Imagine:
+* $\beta_1 = 50$
+* $\beta_2 = 5$
+
+Can we say $x_1$ is 10x more important? Not necessarily. You must check the **Standard Error** and **P-values**.
+
+* $x_1$ might have a huge standard error. Its 95% confidence interval might be $[-100, 200]$. This means we aren't even sure if the effect is positive or negative! It is statistically **insignificant**.
+* $x_2$ might have a tiny standard error. Its confidence interval might be $[4.9, 5.1]$. It is statistically **significant**.
+
+In this case, despite $\beta_1$ being larger, $x_2$ is the "more important" (or at least more reliable) predictor because $x_1$ is just noise.
+
+### Summary Rule
+
+You can only say $x_1$ is more important than $x_2$ if:
+1.  The features have been **Standardized/Scaled**.
+2.  Both coefficients are **Statistically Significant** (low p-values).
+
+---
+---
+
+## Resources
+* [What is Multicollinearity? Extensive video + simulation!](https://www.youtube.com/watch?v=Cba9LJ9lS8s&list=PL-bwWAmDWJmJSt-jvJ7BDkCmSb--LmaLe&index=60)
+* [What is Heteroskedasticity?](https://www.youtube.com/watch?v=2xcUup_-K6c&list=PL-bwWAmDWJmJSt-jvJ7BDkCmSb--LmaLe&index=141)
+* [Variance Inflation Factor Simplified](https://www.youtube.com/watch?v=GMAp_tP1ZQ0&list=PL-bwWAmDWJmJSt-jvJ7BDkCmSb--LmaLe&index=62)
+* [Bayesian Linear Regression : Data Science Concepts](https://www.youtube.com/watch?v=Z6HGJMUakmc&list=PL-bwWAmDWJmJSt-jvJ7BDkCmSb--LmaLe&index=148)
