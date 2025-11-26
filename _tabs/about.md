@@ -15,5 +15,3 @@ Academically, I cut my teeth at **IISc Bangalore**, finishing a thesis on **Bitc
 This blog is my cozy corner on the internet where I break down ML/DL concepts with clarity, curiosity, and a little personality. Expect math, intuition, practical takeaways, and the occasional plot twist delivered by real-world data.
 
 If that sounds like your kind of learning vibe — welcome aboard!
-
-
