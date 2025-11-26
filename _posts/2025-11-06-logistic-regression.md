@@ -24,7 +24,7 @@ To fix this, we transform the probability ($P$) step-by-step:
 
 Now the ranges match! We can safely say that the **log-odds** are linear with respect to practice hours:
 
-$$\ln\left(\frac{P(\text{Win})}{1-P(\text{Win})}\right) = \beta_0 + \beta_1(\text{hours\_practiced})$$
+$$\ln\left(\frac{P(\text{Win})}{1-P(\text{Win})}\right) = \beta_0 + \beta_1(\text{hours_practiced})$$
 
 This link function allows the linear math to coexist with the bounded nature of probability.
 
