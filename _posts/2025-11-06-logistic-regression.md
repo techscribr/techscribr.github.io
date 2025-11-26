@@ -1015,6 +1015,71 @@ The term above is exactly the **Sum of Squared Errors**. If we divide by $m$, it
 Therefore, minimizing the MSE is mathematically identical to maximizing the probability of the data, **if and only if you assume the errors are distributed Normally.**
 
 
+## 12. Explain why we cannot solve for $\beta$ by setting the gradient to 0.
+You have spotted what looks like a paradox, but it is actually the crucial distinction between **finding the derivative** and **solving the equation**.
+
+It is **not** contradictory. Here is the nuance:
+
+1.  **Yes, we can calculate the gradient:** We derived the formula $\frac{\partial J}{\partial \beta_0} = \frac{1}{m} \sum (\hat{p}_i - y_i)$. This formula tells us the *slope* of the cost function for any specific value of $\beta$.
+2.  **No, we cannot solve for $\beta$ when we set that gradient to zero:** We cannot algebraically isolate $\beta$ to find the *bottom* of the cost function directly.
+
+Let's walk through the math to see exactly where the "trap" is.
+
+### The Trap: Expanding $\hat{p}$
+
+The gradient formula looks deceptively simple:
+$$\sum (\hat{p}_i - y_i) = 0$$
+
+It looks like we could just move $y$ to the other side and be done. But remember, **$\hat{p}$ is not a constant number**. It is a function that contains the very $\beta$ values we are trying to find.
+
+If we expand $\hat{p}$ back into its full form, the equation we are trying to solve becomes:
+
+$$\sum_{i=1}^{m} \left( \frac{1}{1 + e^{-(\beta_0 + \beta_1 x_i)}} - y_i \right) = 0$$
+
+Now, try to solve this equation for $\beta_0$.
+
+1.  Move $y$ to the right:
+    $$\sum_{i=1}^{m} \frac{1}{1 + e^{-(\beta_0 + \beta_1 x_i)}} = \sum_{i=1}^{m} y_i$$
+
+2.  **Stuck!** You have a sum of sigmoid functions on the left. The $\beta_0$ term is trapped:
+    * Inside a negative exponent...
+    * Which is inside a denominator...
+    * Which is inside a summation.
+
+There is no algebraic rule that allows you to "unpack" the $\beta_0$ from that summation. You cannot factor it out. This is what makes it a **transcendental equation**.
+
+### Comparison: Why Linear Regression CAN do it
+
+Let's look at why standard Linear Regression *doesn't* have this problem.
+
+In Linear Regression, the prediction is simple: $\hat{y} = \beta x$.
+The gradient (setting it to 0) looks like this:
+
+$$\sum (\hat{y}_i - y_i) \cdot x_i = 0$$
+
+Substitute $\hat{y}$ with $\beta x$:
+$$\sum (\beta x_i - y_i) \cdot x_i = 0$$
+
+Now watch how easy it is to isolate $\beta$:
+
+1.  Distribute the $x$:
+    $$\sum (\beta x_i^2 - y_i x_i) = 0$$
+
+2.  Split the sum (Linearity allows this!):
+    $$\beta \sum x_i^2 - \sum y_i x_i = 0$$
+
+3.  Move one term to the right:
+    $$\beta \sum x_i^2 = \sum y_i x_i$$
+
+4.  **SOLVED:**
+    $$\beta = \frac{\sum y_i x_i}{\sum x_i^2}$$
+
+See the difference?
+* In **Linear Regression**, $\beta$ is just multiplied by $x$. We can factor it out of the sum and isolate it on the left side.
+* In **Logistic Regression**, $\beta$ is trapped inside the non-linear sigmoid function inside the sum. We can calculate the *value* of the gradient for any given $\beta$, but we cannot write a formula that says $\beta = \dots$
+
+That is why we need **Gradient Descent**. Since we can't jump straight to the answer (Closed Form), we have to use the gradient to take small steps towards it.
+
 ---
 ---
 
