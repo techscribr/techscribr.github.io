@@ -876,7 +876,7 @@ $$y = \hat{y} + \epsilon, \quad \text{where } \epsilon \sim \mathcal{N}(0, \sigm
 **The Derivation (The "Aha\!" Moment):**
 If you write down the probability density function (PDF) for a Normal distribution and try to maximize the likelihood of observing your data ($y$), the math simplifies to:
 
-1.  **Gaussian PDF:** $P(y|\hat{y}) \propto e^{-(y - \hat{y})^2}$
+1.  **Gaussian PDF:** $P(y \vert \hat{y}) \propto e^{-(y - \hat{y})^2}$
 2.  To maximize probability $P$, we minimize the negative log of $P$.
 3.  **Negative Log Likelihood:** $-\ln(e^{-(y - \hat{y})^2}) = (y - \hat{y})^2$
 
