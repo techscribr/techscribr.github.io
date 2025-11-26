@@ -1052,3 +1052,110 @@ Since our output `y` is the sum of the deterministic part (a constant for a give
 * **The variance of `y`** is the same as the variance of the error term, $Var(y) = \sigma^2$.
 
 Therefore, the assumption that the error term is normally distributed directly ensures that the output variable `y` is also normally distributed around the regression line.
+
+
+## 12. What's the connection between Bayesian Linear Regression and L1/L2 regularization based Linear Regression?
+This is one of the most elegant connections in machine learning. It bridges the gap between **frequentist/optimization** approaches (minimizing a loss function) and **Bayesian/probabilistic** approaches (updating beliefs).
+
+The connection is this: **Regularized Linear Regression is exactly equivalent to finding the Maximum A Posteriori (MAP) estimate in a Bayesian Linear Regression model with specific priors.**
+
+* **Ridge Regression (L2)** $\iff$ Bayesian Regression with a **Gaussian Prior**.
+* **Lasso Regression (L1)** $\iff$ Bayesian Regression with a **Laplace Prior**.
+
+Let's break down the math and the intuition to see exactly how this works.
+
+---
+
+### 1. The Foundation: Bayes' Theorem
+
+In Bayesian inference, we update our beliefs about the coefficients ($\beta$) based on the data ($X, y$).
+
+$$P(\beta \vert X, y) = \frac{P(y \vert X, \beta) \cdot P(\beta)}{P(y \vert X)}$$
+
+* **Posterior: $P(\beta \vert X, y)$ :** Our updated belief about the weights after seeing data.
+* **Likelihood $P(y \vert X, \beta)$ :** How well the weights explain the data. Maximizing this is just standard OLS.
+* **Prior $P(\beta)$ :** Our belief about the weights *before* seeing any data.
+* **Marginal Likelihood $P(y \vert X)$ :** A constant normalization factor (we can ignore this for optimization).
+
+So, finding the best weights ($\beta_{MAP}$) means maximizing:
+
+$$\text{Posterior} \propto \text{Likelihood} \times \text{Prior}$$
+
+Or, taking the logarithm (which turns multiplication into addition):
+
+$$\log(\text{Posterior}) \propto \log(\text{Likelihood}) + \log(\text{Prior})$$
+
+---
+
+### 2. The Connection to L2 (Ridge Regression)
+
+In Ridge regression, we add a penalty term $\lambda \sum \beta_j^2$. Let's see how this emerges from the Bayesian view.
+
+**The Prior:** Assume the coefficients come from a **Gaussian (Normal) Distribution** centered at zero. This means we believe, prior to seeing data, that the weights are likely small and close to zero.
+
+$$P(\beta) = \frac{1}{\sqrt{2\pi\tau^2}} \exp\left( - \frac{\beta^2}{2\tau^2} \right) \Rightarrow P(\beta) \propto \exp\left(-\frac{\beta^2}{2\tau^2}\right)$$
+
+**What is $\tau$ (tau)?**
+* **$\tau$ is the Standard Deviation** of the Gaussian prior.
+* It represents our "uncertainty" or "tolerance" for how large the weights can be.
+* **Large $\tau$:** The bell curve is wide and flat. We are okay with large weights. (Weak regularization).
+* **Small $\tau$:** The bell curve is narrow and spiked. We strictly believe weights should be close to zero. (Strong regularization).
+
+**The Math:**
+When we calculate the $\log(\text{Posterior})$:
+1.  **Log-Likelihood:** Becomes the negative sum of squared errors (standard OLS part): $-\sum(y - X\beta)^2$.
+    * We assume the **noise ($\epsilon$)** in the data generation process is Gaussian.
+    * This means $y_i$ follows a Gaussian distribution centered at $\hat{y}_i$.
+    * This gives us the formula: $\text{Likelihood} \propto \exp(-(y - \hat{y})^2)$.
+    * **This leads to the Mean Squared Error (MSE) term.**
+2.  **Log-Prior:** $\log(\exp(-\beta^2)) = -\beta^2$.
+
+Therefore, maximizing the posterior is equivalent to minimizing:
+$$J(\beta) = \sum(y - \hat{y})^2 + \lambda \sum \beta^2$$
+
+**Conclusion:** Ridge Regression is simply Bayesian Regression where you assume the weights are normally distributed. The regularization parameter $\lambda$ is inversely related to the variance of that Gaussian prior.
+
+---
+
+### 3. The Connection to L1 (Lasso Regression)
+
+In Lasso regression, we add a penalty term $\lambda \sum \lvert \beta_j \rvert$.
+
+**The Prior:** Assume the coefficients come from a **Laplace Distribution** centered at zero.
+The Laplace distribution looks like a double exponential. Unlike the bell curve (Gaussian), it has a very **sharp peak at zero** and wider tails.
+
+$$P(\beta) = \frac{1}{2b} \exp\left( - \frac{|\beta|}{b} \right) \Rightarrow P(\beta) \propto \exp\left(-\frac{|\beta|}{b}\right)$$
+
+**What is $b$?**
+* **$b$ is the Scale Parameter** of the Laplace distribution (similar concept to standard deviation).
+* It controls how quickly the probability drops off as you move away from zero.
+* **Large $b$:** The peak at zero is dull, and tails are wide. (Weak regularization).
+* **Small $b$:** The peak at zero is extremely sharp. We strongly believe weights should be exactly zero. (Strong regularization).
+
+**The Math:**
+When we calculate the $\log(\text{Posterior})$:
+1.  **Log-Likelihood:** Still the negative sum of squared errors: $-\sum(y - X\beta)^2$.
+    * Same reason as L2 regularization, since the **noise ($\epsilon$)** in the data generation process is Gaussian.
+2.  **Log-Prior:** $\log(\exp(-\lvert \beta \rvert)) = -\lvert \beta \rvert$.
+
+Therefore, maximizing the posterior is equivalent to minimizing:
+$$J(\beta) = \sum(y - \hat{y})^2 + \lambda \sum |\beta|$$
+
+**Conclusion:** Lasso Regression is simply Bayesian Regression where you assume the weights follow a Laplace distribution.
+
+---
+
+### 4. Why Intuition Matches Reality
+
+This probabilistic view explains the *behavior* we see in these models:
+
+* **Gaussian Prior (Ridge):** A Bell curve is flat at the top. It pulls large weights toward zero, but it doesn't force them *exactly* to zero because the probability density near zero is smooth. This matches Ridge's behavior (shrinkage, but no feature selection).
+* **Laplace Prior (Lasso):** The Laplace distribution has a sharp spike at zero. It places a very high probability mass *exactly* on zero. This explains why Lasso performs **feature selection**—it forces coefficients to become exactly zero because that is the most probable value in the prior.
+
+### Summary Table
+
+| Regression Type | Bayesian Equivalent | Prior Distribution | Why it works? |
+| :--- | :--- | :--- | :--- |
+| **OLS (Vanilla)** | Maximize Likelihood (MLE) | **Uniform / Flat** (No prior belief) | We assume all weight values are equally probable before seeing data. |
+| **Ridge (L2)** | Maximize Posterior (MAP) | **Gaussian (Normal)** | We assume weights are likely small and distributed normally around zero. |
+| **Lasso (L1)** | Maximize Posterior (MAP) | **Laplace** | We assume weights are likely to be exactly zero (sparsity). |
