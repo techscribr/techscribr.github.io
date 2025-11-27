@@ -2,7 +2,7 @@
 title: "Venturing into the Isolation Forest"
 date: 2025-11-15 18:00:00 +0530
 categories: [Machine Learning]
-tags: [ML, OutlierDetection]
+tags: [ML-Models, OutlierDetection]
 math: true
 ---
 

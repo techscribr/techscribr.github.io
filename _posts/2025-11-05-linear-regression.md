@@ -2,7 +2,7 @@
 title: "All about Linear Regression"
 date: 2025-11-05 11:30:00 +0530
 categories: [Machine Learning]
-tags: [ML, Regression]
+tags: [ML-Models, Regression]
 math: true
 ---
 

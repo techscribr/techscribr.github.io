@@ -2,7 +2,7 @@
 title: "Understanding Bias-Variance Tradeoff"
 date: 2025-11-03 18:00:00 +0530
 categories: [Machine Learning]
-tags: [MLTheory]
+tags: [ML-Theory]
 math: true
 ---
 

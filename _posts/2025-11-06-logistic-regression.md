@@ -2,7 +2,7 @@
 title: "All about Logistic Regression"
 date: 2025-11-06 20:00:00 +0530
 categories: [Machine Learning]
-tags: [ML, Classification]
+tags: [ML-Models, Classification]
 math: true
 ---
 

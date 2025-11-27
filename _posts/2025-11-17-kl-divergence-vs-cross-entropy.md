@@ -2,7 +2,7 @@
 title: "Connection between KL Divergence & Cross Entropy"
 date: 2025-11-17 15:00:00 +0530
 categories: [Machine Learning]
-tags: [MLTheory, Classification]
+tags: [ML-Theory, Classification]
 math: true
 ---
 
@@ -13,6 +13,7 @@ This question connects the mathematical definitions of information theory direct
 ### The Connection: KL Divergence and Cross-Entropy
 
 The key relationship is:
+
 $$
 \text{Cross-Entropy}(P, Q) = \text{KL Divergence}(P || Q) + \text{Entropy}(P)
 $$
