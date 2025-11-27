@@ -486,7 +486,7 @@ And that’s okay — the model is still classified as a *generalized linear mod
 
 * The **decision boundary** is linear only in the original feature space.
 
-  * Example: ( w_1 x_1 + w_2 x_2 + b = 0 )
+  * Example: $( \text{w}_1 \text{x}_1 + \text{w}_2 \text{x}_2 + \text{b} = 0 )$
 * But the **probabilities** are nonlinear due to the sigmoid.
 
 That’s why logistic regression is both:
