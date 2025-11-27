@@ -109,7 +109,7 @@ In standard deterministic regression imputation (what `IterativeImputer` does by
 * **Model:** `Income = 1000 * Age + 5000`.
 * **Data Point:** A missing `Income` for a 30-year-old.
 * **Deterministic Prediction:** `1000 * 30 + 5000 = 35,000`.
-* **The Problem:** In the real world, not every 30-year-old earns exactly \$35,000. Some earn \$32k, some \$40k. By filling everyone with \$35k, you create an artificially perfect, straight line of data. You have destroyed the natural "noise" or variance of the world.
+* **The Problem:** In the real world, not every 30-year-old earns exactly \\$35,000. Some earn \\$32k, some \\$40k. By filling everyone with \\$35k, you create an artificially perfect, straight line of data. You have destroyed the natural "noise" or variance of the world.
 
 ### How MICE Adds Randomness (Stochastic Regression)
 MICE fixes this by adding a random **error term** to the prediction.
