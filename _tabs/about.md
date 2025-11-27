@@ -10,7 +10,7 @@ I’ve built everything from **supply impressions forcasting** to **keyword/audi
 
 My journey’s taken me through Walmart, Sahaj, and Broadcom, with pit stops involving **Kafka storms, PySpark jobs**, and deep-dive knowledge sessions because I can't resist explaining things I find cool.
 
-Academically, I cut my teeth at **IISc Bangalore**, finishing a thesis on **Bitcoin stability & anonymity**, and I’ve been studying the craft of ML ever since.
+I earned my Master’s at IISc Bangalore, diving deep into **Bitcoin’s stability and anonymity** — far from ML, but a great reminder that exploring different domains often leads to unexpected passions.
 
 This blog is my cozy corner on the internet where I break down ML/DL concepts with clarity, curiosity, and a little personality. Expect math, intuition, practical takeaways, and the occasional plot twist delivered by real-world data.
 
