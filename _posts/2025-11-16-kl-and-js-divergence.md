@@ -2,7 +2,7 @@
 title: "A Short Primer on KL/JS Divergence"
 date: 2025-11-16 12:00:00 +0530
 categories: [Machine Learning]
-tags: [ML, DataDrift, ConceptDrift]
+tags: [MLTheory, DataDrift, ConceptDrift]
 math: true
 ---
 
