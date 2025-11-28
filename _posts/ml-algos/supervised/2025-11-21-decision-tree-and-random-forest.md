@@ -2,7 +2,7 @@
 title: "The Wisdom of Trees: From Single Decisions to Ensemble Intelligence"
 date: 2025-11-21 15:00:00 +0530
 categories: [Machine Learning]
-tags: [ML-Models, Regression, Classification, Tree]
+tags: [ML-Models, Regression, Classification, Tree, Ensemble]
 math: true
 ---
 
