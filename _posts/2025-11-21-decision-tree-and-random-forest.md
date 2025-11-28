@@ -293,10 +293,7 @@ Mathematically, if you have $B$ independent random variables (trees) each with v
 
 While trees in a forest aren't perfectly independent (they are trained on similar data), the randomization attempts to decorrelate them as much as possible, driving the variance down.
 
-
-
-[Image of random forest architecture]
-
+![Image of random forest architecture](assets/img/tree-based-models/random-forest.jpg)
 
 ---
 
