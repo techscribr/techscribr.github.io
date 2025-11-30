@@ -235,3 +235,121 @@ The slow queries are those that force Bigtable to abandon the Row Key and **scan
 ### The Core Principle
 
 To use Bigtable correctly, you must ensure that **all your read queries are satisfiable by the Row Key and its prefix.** If you find yourself needing to query based on an attribute that is *not* part of the Row Key, you should use a different database (like **Elasticsearch** or **BigQuery**).
+
+---
+
+## Explain CAP theory in a concise manner with examples.
+
+Here is a simple explanation of the CAP Theorem, with examples for Kafka and Elasticsearch.
+
+### What is the CAP Theorem?
+
+In simple terms, the **CAP Theorem** is a rule for distributed systems (like databases or applications spread across multiple computers). It states that any distributed system can only provide **two** of the following three guarantees at the same time:
+
+1.  **C - Consistency:**
+    * **What it means:** All clients see the *same, most up-to-date* data at the same time, no matter which node they connect to.
+    * **Analogy:** A bank account. If you withdraw money, your balance must be *instantly* and *consistently* updated everywhere. You can't be shown an old, incorrect balance.
+
+2.  **A - Availability:**
+    * **What it means:** The system is *always* available to respond to requests. It never returns an error, even if some of its nodes are down or the data is slightly out-of-date.
+    * **Analogy:** A social media feed. It *always* loads, even if the "like" count you see is 30 seconds stale. It prefers to show you *something* rather than an error page.
+
+3.  **P - Partition Tolerance:**
+    * **What it means:** The system continues to operate even if the network breaks down between its nodes (a "network partition"). The nodes are still alive, but they just can't talk to each other.
+
+### The Real Choice: C vs. A
+
+In any real-world system, **you must choose Partition Tolerance (P)**. Network failures *will* happen. The internet is unreliable, and servers will get disconnected.
+
+Therefore, the CAP theorem isn't really "pick two of three." It's:
+> **"When a network partition (P) happens, you must choose between Consistency (C) and Availability (A)."**
+
+* **CP (Choose Consistency over Availability):** When a partition happens, the system will become *unavailable* (it will stop responding or return errors) to avoid the risk of serving stale or incorrect data.
+* **AP (Choose Availability over Consistency):** When a partition happens, the system will *stay available*, but it might serve *inconsistent* (stale) data.
+
+### Example 1: Kafka (A CP System)
+
+Kafka is a distributed streaming log. Its primary purpose is to be a durable, ordered, and truthful record of events.
+
+* **How it works:** Data is written to a topic *partition*. That partition has one "leader" node and several "follower" nodes that copy the data.
+* **Consistency (C):** For a write to be successful, the leader must write the data and then wait for a "quorum" of its *in-sync followers* (the ISR) to also copy it. Both writes and reads are served *only* by the leader.
+* **Partition (P):** What happens if the leader node is partitioned and can't talk to its followers or the central coordinator (ZooKeeper/KRaft)?
+* **The Choice:** The cluster will **elect a new leader** from the followers that were in the ISR.
+* **The Consequence:** During the time the old leader is partitioned and a new leader is being elected (a process that can take seconds), that partition is **unavailable**. It will *refuse* to accept new writes.
+* **Conclusion:** Kafka is a **CP** system. It sacrifices availability (for a short time) to guarantee that the data log is perfectly consistent and no messages are ever lost or out of order. A bank would use a CP system.
+
+### Example 2: Elasticsearch (An AP System)
+
+Elasticsearch is a distributed search and analytics engine. Its primary purpose is to be *fast* and *always available* for search queries.
+
+* **How it works:** Data is written to a "primary shard" (node) and then copied to "replica shards."
+* **Availability (A):** A search query (a read request) can be answered by *either* the primary shard or *any* of the replica shards.
+* **Partition (P):** What happens if a node with a replica shard gets partitioned from the primary?
+* **The Choice:** The primary shard might receive new data, but the isolated replica doesn't know about it. If a user's read request hits that *isolated replica*, the replica will happily serve the *stale data* it has. It doesn't know it's inconsistent.
+* **The Consequence:** The system remains **fully available** for reads, but different users might see slightly different results (stale data) for a short time.
+* **Conclusion:** Elasticsearch is an **AP** system. It prioritizes availability (you can always search) at the cost of "eventual consistency." A search engine or a product catalog, where being 10 seconds out-of-date is acceptable, would use an AP system.
+
+## Explain what are OLTP and OLAP systems.
+
+That's a core concept in data systems design. Understanding the difference between OLTP and OLAP defines what kind of database you should use for any given task.
+
+Here is a detailed breakdown of OLTP and OLAP, including their characteristics and real-world examples.
+
+### What is OLTP? (Online Transaction Processing)
+
+**OLTP is about running the core business.** It involves fast, frequent, short transactions that keep the lights on.
+
+#### Core Characteristics
+
+* **Primary Goal:** Data integrity, high concurrency, and speed for small, atomic transactions.
+* **Data Pattern:** **Read, Insert, Update, and Delete (CRUD)** operations. Transactions are typically simple and affect only a few rows at a time.
+* **Database Design:** Optimized for **row-based storage** (faster to read/write entire records) and relies heavily on **indexing** (to locate a single record quickly).
+* **Scale:** Must handle high **write volume** and high concurrency (many users trying to update data simultaneously).
+* **Integrity:** Requires strict **ACID compliance** (Atomicity, Consistency, Isolation, Durability) to ensure no money is lost, and the data is never corrupted.
+* **Data Volume:** Typically holds the current, operational state (Terabytes, but focused on the speed of retrieval).
+
+#### Real-World OLTP Examples
+
+| System | Transaction Example | Characteristic |
+| :--- | :--- | :--- |
+| **Banking (ATM)** | **A deposit or withdrawal.** | High concurrency, requires immediate **write** integrity. |
+| **E-commerce Checkout** | **Processing an order.** | The transaction must either fully succeed or fully fail. |
+| **Website Login** | **Updating a user's last login time.** | Fast key-value lookup, small update. |
+| **User Feature Store** | **Updating a user's `tx_count_last_hour` feature.** | High-frequency **read-modify-write** operation. |
+
+**Appropriate Databases:** **PostgreSQL, MySQL, Cassandra, Aerospike, Google Bigtable.**
+
+### What is OLAP? (Online Analytical Processing)
+
+**OLAP is about running the business *analysis*.** It involves complex queries on vast amounts of historical data to uncover trends and insights.
+
+#### Core Characteristics
+
+* **Primary Goal:** Speed for complex queries, aggregation, and deep analysis.
+* **Data Pattern:** **Read-only, large-scale, complex queries.** Queries typically aggregate data over millions or billions of rows (e.g., `SUM`, `AVG`, `GROUP BY`).
+* **Database Design:** Optimized for **columnar storage** (faster to read only the columns needed) and **Massively Parallel Processing (MPP)**. It uses partitioning and clustering instead of traditional indexes.
+* **Scale:** Optimized for massive **read volume** and high computational power.
+* **Integrity:** Typically follows **BASE** principles (Basically Available, Soft state, Eventually consistent) or is highly durable but not transactional.
+* **Data Volume:** Holds historical data, logs, and facts (Petabytes).
+
+#### Real-World OLAP Examples
+
+| System | Query Example | Characteristic |
+| :--- | :--- | :--- |
+| **Business Intelligence (BI)** | **What was the total revenue in Q3 for customers aged 30-40 in Europe?** | Aggregates over a large time window and segment. |
+| **ML Training** | **Calculate the average transaction amount for all users over the past 3 years.** | Full scan of historical logs to build feature vectors. |
+| **Reporting Dashboard** | **Show the latency trend of the API over the last 90 days.** | High-volume reads of time-series data. |
+| **Financial Forecasting** | **Predict the sales volume for the next quarter by region.** | Complex joins and large-scale computation. |
+
+**Appropriate Databases:** **Google BigQuery, Amazon Redshift, Apache Hive, Snowflake.**
+
+### Summary of Key Differences
+
+| Feature | OLTP (Transaction Processing) | OLAP (Analytical Processing) |
+| :--- | :--- | :--- |
+| **Activity** | Day-to-day operations (Updating a record). | Strategic analysis (Running a report). |
+| **Typical Query** | `SELECT * WHERE user_id = 123` | `SELECT AVG(sales) GROUP BY country` |
+| **Metrics** | Transactions per second (TPS). | Query latency for complex aggregates. |
+| **Data Structure** | Row-based, indexed. | Columnar-based, partitioned. |
+| **Goal** | Consistency and Speed of **Writes/Updates**. | Speed and efficiency of **Reads/Scans**. |
+
