@@ -1,5 +1,5 @@
 ---
-title: "A Short Primer on Scalable Data Storage"
+title: "A Short Primer on Scalable Data Storage for ML Systems"
 date: 2025-11-25 12:00:00 +0530
 categories: [ML Platform]
 tags: [ML-Platform]
@@ -353,3 +353,207 @@ Here is a detailed breakdown of OLTP and OLAP, including their characteristics a
 | **Data Structure** | Row-based, indexed. | Columnar-based, partitioned. |
 | **Goal** | Consistency and Speed of **Writes/Updates**. | Speed and efficiency of **Reads/Scans**. |
 
+---
+
+## Is there any solution to achieve massive scaling for an RDBMS system while still maintaining ACID compliance?
+
+Yes, one such product in Google Spanner.
+
+### **What is Spanner?**
+
+**Google Cloud Spanner** is Google’s **globally distributed, horizontally scalable, strongly consistent, fully managed relational database**.
+
+In one line:
+
+> **It combines the scalability of NoSQL with the consistency + SQL capabilities of a relational database.**
+
+It’s the backbone of many Google-scale systems (AdWords, Google Play, Gmail metadata, etc.) and is **available as a fully managed service in GCP**.
+
+
+### **How does Spanner work? (the core concepts)**
+
+Spanner achieves something extremely rare:
+**global distribution + horizontal scaling + strong consistency + SQL + ACID transactions.**
+It uses a set of innovations to pull this off.
+
+Let’s break it down simply.
+
+### 1. **Tables → Shards (Splits) → Distributed Across Nodes**
+
+Spanner automatically splits tables into “splits” based on primary key ranges:
+
+* You choose a primary key.
+* Spanner automatically shards data based on the key.
+* Each shard is stored on different nodes and can be replicated across regions.
+
+This gives:
+
+* Horizontal scalability
+* Automatic load balancing
+* Automatic resharding when data grows
+
+### 2. **TrueTime: the magic ingredient**
+
+Spanner uses **TrueTime**, a globally synchronized clock API that provides **bounded clock uncertainty**.
+
+TrueTime is powered by:
+
+* GPS receivers
+* Atomic clocks inside Google data centers
+
+TrueTime gives timestamps with a guarantee:
+
+```
+t ∈ [earliest_possible_time, latest_possible_time]
+```
+
+This allows Spanner to:
+
+* Order transactions globally
+* Avoid inconsistency due to clock drift
+* Achieve **external consistency** (strongest consistency you can get)
+
+TrueTime is why Spanner can do **global ACID transactions** — something most distributed databases can’t do.
+
+### 3. **Synchronous Replication Across Regions**
+
+Data is replicated using **Paxos/Raft-like quorum consensus**, not asynchronous replication.
+
+For example (3 replicas):
+
+* Majority (2/3) must acknowledge writes.
+* If one replica fails, the system continues.
+
+This provides:
+
+* No data loss
+* Strong consistency
+* Geographic availability
+
+You can choose:
+
+* multi-region,
+* regional, or
+* multi-zone configurations
+
+### 4. **Strongly Consistent Transactions**
+
+Spanner supports:
+
+* Strongly consistent reads (linearizable)
+* ACID transactions
+* Serializable isolation across distributed shards
+
+SQL support includes:
+
+* ANSI SQL
+* Joins
+* Secondary indexes
+* Mutations
+* Commit timestamps
+* Change streams (CDC)
+
+This is *full relational behavior* but at horizontal scale.
+
+### 5. **Automatic scaling + storage separation**
+
+Compute and storage scale independently.
+
+Spanner:
+
+* Automatically adds splits as data grows
+* Rebalances hot shards
+* Handles replica placement
+* Manages failovers automatically
+
+This is crucial for YouTube-scale or multi-petabyte workloads.
+
+### 6. **Fully Managed**
+
+You don’t manage:
+
+* Replication
+* Sharding
+* Clock sync
+* Failover
+* Backups
+* Storage resizing
+
+GCP handles all of that.
+
+### 7. **Use cases where Spanner shines**
+
+* Global-scale OLTP
+* Financial systems needing strong consistency
+* Inventory, account balances, orders
+* Gaming backends
+* Multi-region user databases
+* Enterprise SaaS with global tenants
+* Google-scale metadata systems
+* High-QPS transactional workloads
+
+The moment you need:
+
+* **billions of rows**
+* **globally consistent transactions**
+* **horizontal scale**
+* **SQL + strong consistency**
+  Spanner is often the right answer.
+
+### 8. **When NOT to use Spanner**
+
+Spanner is **not cheap**. It is premium infrastructure.
+
+Avoid Spanner when:
+
+* Dataset is small (<1 TB)
+* QPS is low
+* You don't need multi-region or strong global consistency
+* You need simple lookups only (use Bigtable)
+* You need flexible schema/noSQL (use Firestore/Bigtable)
+
+### 9. **Comparison: Bigtable vs Spanner**
+
+| Feature      | Bigtable                    | Spanner              |
+| ------------ | --------------------------- | -------------------- |
+| Type         | Wide-column NoSQL           | Distributed RDBMS    |
+| Schema       | Semi-structured             | Structured SQL       |
+| Transactions | Single row                  | Global, ACID         |
+| Joins        | No                          | Yes                  |
+| Consistency  | Eventually/strong (per row) | Strong globally      |
+| Use cases    | High-throughput lookups     | Global OLTP          |
+| Scaling      | Massive linear scale        | Massive linear scale |
+| Pricing      | Cheaper                     | Premium              |
+
+If you need:
+
+* key-value store → Bigtable
+* global SQL database → Spanner
+
+### **TL;DR Answer**
+
+* **How does Spanner work?**
+  Using sharded tables, synchronous replication, Paxos, and TrueTime global clock to provide globally consistent, scalable SQL with ACID transactions.
+
+* **Is it available in GCP?**
+  **Yes**, it is a fully managed GCP service known as **Cloud Spanner**.
+
+
+## Since Google Cloud Spanner is a distributed RDBMS, does it support all 3 properties in CAP theorem?
+
+Yes, Google Cloud Spanner is a unique distributed database that challenges the traditional understanding of the CAP theorem.
+
+While the CAP theorem states that a distributed system can only guarantee two out of the three properties (Consistency, Availability, and Partition Tolerance), Spanner effectively provides **Consistency (C)** and **Availability (A)** while running on a highly partitioned, global network.
+
+### How Spanner "Cheats" CAP
+
+It doesn't technically violate CAP, but it minimizes the trade-off to a point where it *feels* like it supports all three.
+
+1.  **Consistency (Strong External Consistency):** Spanner provides global, synchronous replication. It uses a unique timekeeping API called **TrueTime**, which relies on GPS and atomic clocks in Google's data centers. This allows Spanner to assign globally consistent timestamps to transactions, ensuring strict serializability across the globe.
+2.  **Availability (High Availability):** Google claims 99.999% availability for Spanner. It achieves this through massive redundancy and a highly optimized network.
+3.  **Partition Tolerance (The "Technical" Trade-off):** In the strict CAP sense, Spanner is a **CP** system. If a major network partition occurs (e.g., a fiber cut isolating a continent), Spanner chooses Consistency over Availability. The isolated partition will stop accepting writes to maintain data integrity.
+    * **However:** Google's private global network is so redundant that such partitions are exceptionally rare. Thus, in practice, users experience it as a **CA** system that also handles partitioning (P) seamlessly 99.999% of the time.
+
+
+
+So, practically speaking, Spanner is often described as a **CA** database that is effectively **P-tolerant** due to Google's infrastructure, though theoretically, it remains a **CP** system.
