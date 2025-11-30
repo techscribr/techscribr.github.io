@@ -31,8 +31,6 @@ $$
 
 This is the core reason why Cross-Entropy is used as a loss function: it forces the model $Q$ to become as close to the true distribution $P$ as possible.
 
----
-
 ### Step-by-Step Derivation (The Coin Flip Example)
 
 Let's define our coin flip scenario (a Bernoulli trial).
@@ -49,8 +47,6 @@ Let's define our coin flip scenario (a Bernoulli trial).
 2.  **Simulating Coin ($Q$):** Our model's predicted distribution (the output of our neural network).
     * $Q(H) = q$ (The model's predicted probability of heads)
     * $Q(T) = 1 - q$
-
----
 
 #### A. Deriving KL Divergence
 
@@ -81,8 +77,6 @@ Rearrange the terms:
 $$
 KL(P || Q) = \underbrace{\left[ -p \log(q) - (1-p) \log(1-q) \right]}_{\text{Term 1}} + \underbrace{\left[ p \log(p) + (1-p) \log(1-p) \right]}_{\text{Term 2}}
 $$
-
----
 
 #### B. Deriving Cross-Entropy and Entropy
 
@@ -119,8 +113,6 @@ H(P) = -p \log(p) - (1-p) \log(1-p)
 $$
 
 If we look back at Term 2 from the KL derivation, Term 2 is simply **$-H(P)$**.
-
----
 
 ### C. The Final Connection
 

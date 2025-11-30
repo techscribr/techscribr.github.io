@@ -153,6 +153,7 @@ Wide-column stores are a **NoSQL** database design built to handle **massive wri
 | **Key Advantage** | Massive cost and speed savings on analytical queries. | Linear scalability and predictable low latency for key lookups. |
 | **Examples** | BigQuery, Redshift, Snowflake | Cassandra, Bigtable, ScyllaDB |
 
+---
 
 ## Do Wide-column stores allow partitioning and indexing? If so, then explain how.
 

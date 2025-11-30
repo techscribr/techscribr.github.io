@@ -51,6 +51,7 @@ This produces an **isolation tree**.
 * Efficient — works with subsamples, linear time complexity.
 * Naturally isolates outliers without modeling normal behavior explicitly.
 
+---
 
 ## 2. Explain the anomaly score formulation for Isolation Forest.
 The core idea is simple: **Anomalies are easier to "isolate" than normal points.** The score formula in **IF** is just a way to normalize this "ease of isolation" into a consistent score between 0 and 1.
@@ -125,6 +126,7 @@ This is the most important part. Let's analyze the formula $s = 2^{-\text{expone
 * **$s \approx 0.5$:** A typical **normal** point.
 * **$s < 0.5$:** A very "normal" inlier.
 
+---
 
 ## 3. Explain the tree/forest building process.
 Here is the step-by-step algorithm for **building** an Isolation Forest.
@@ -185,6 +187,7 @@ After this process finishes, you have a fully grown Isolation Tree.
 * **Anomalies:** Likely ended up in leaf nodes very close to the root (short path length) because their values were extreme (close to min/max), so a random split was highly likely to "chop" them off early.
 * **Normal Points:** Likely ended up deep in the tree (long path length) because they were clustered in the middle, requiring many precise cuts to separate them from their neighbors.
 
+---
 
 ## 4. Explain why we take sub-samples of the data while building the tree.
 This is the most counter-intuitive part of the Isolation Forest algorithm, and understanding it is the "Aha!" moment for this technique.

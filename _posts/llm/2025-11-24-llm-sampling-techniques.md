@@ -81,6 +81,6 @@ Top-K makes a decision for *right now*, with no memory of other paths.
 
 ---
 
-### **Conclusion**
+## **Conclusion**
 
 Choosing the right sampling technique depends entirely on your goal. If you need a mathematically perfect translation, stick to **Beam Search**. If you want a chatbot to write a poem or brainstorm ideas, **Top-P (Nucleus) Sampling** is your best friend.

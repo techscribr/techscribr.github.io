@@ -44,6 +44,8 @@ Here are the three mechanisms of missing data and how to handle them, followed b
 | **MAR** | Explained by other columns. | MICE (Regression) or Predictive Imputation. |
 | **MNAR** | Explained by the missing value itself. | Create "Unknown" category or Sensitivity Analysis. |
 
+---
+
 ## 2a. Explain the concept behind MICE (Multiple Imputation by Chained Equations) in missing data imputation with example.
 MICE (Multiple Imputation by Chained Equations) is a sophisticated, iterative method for handling missing data. Unlike simple imputation (like filling with the mean), MICE acknowledges the uncertainty of missing values by creating multiple different plausible datasets.
 
@@ -93,6 +95,8 @@ The description above creates *one* imputed dataset. However, to capture uncerta
 
 ### Why it's Powerful
 MICE assumes the data is **Missing At Random (MAR)**, meaning the probability of a value being missing is related to other observed variables. Because it uses those other variables to predict the missing value, it preserves the relationships and correlations in your data far better than mean/median imputation.
+
+---
 
 ## 2b. Explain how randomness is introduced in the data in MICE.
 This is the most critical part of MICE. Without the randomness, MICE would just be "SICE" (Single Imputation), and you would drastically underestimate the variance in your data.
@@ -163,6 +167,8 @@ Once you have these 5 datasets (which are now "complete" but slightly different)
 
 This final averaged model is far more robust because it has "seen" the uncertainty. It knows that the missing values could have been a range of things, so it doesn't become overconfident in its predictions.
 
+---
+
 ## 2c. Is there any python library that implements this MICE algorithm?
 Yes, there are a few Python libraries for this, but one stands out as the standard.
 
@@ -225,6 +231,7 @@ For a more statistically rigorous implementation (especially if you need the "Po
   * **Use `sklearn` (`IterativeImputer`)** for machine learning pipelines where you ultimately just want "good data" to feed into an XGBoost model.
   * **Use `statsmodels`** if you are doing econometrics or biostatistics research and need to report p-values and confidence intervals that account for the imputation uncertainty.
 
+---
 
 ## 3. How do we handle missing data in categorical columns?
 Categorical data (like `Gender`, `City`, `Product_Type`) requires different strategies than numerical data.

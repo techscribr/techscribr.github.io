@@ -118,8 +118,6 @@ $$\frac{\partial J}{\partial \beta_0} = \frac{1}{3} \sum_{i=1}^{3} (\hat{p}_i - 
 $$\frac{\partial J}{\partial \beta_1} = \frac{1}{3} \sum_{i=1}^{3} (\hat{p}_i - y_i) \cdot x_i$$
 *(It is the average prediction error weighted by the input $x$).*
 
----
-
 #### b. The "Tug of War" (Calculating the Nudges)
 
 Let's imagine the algorithm is currently at iteration 1. It has random values for $\beta$, and it makes predictions. Let's see how each sample tries to "push" or "pull" the coefficients.
@@ -141,8 +139,6 @@ Let's imagine the algorithm is currently at iteration 1. It has random values fo
 * **Current Prediction:** Let's say $\hat{p}_3 = 0.4$.
 * **Error ($\hat{p}_3 - y_3$):** $0.4 - 1.0 = \mathbf{-0.6}$.
 * **The Push:** The error is **negative**. Like Sample 1, this tells the gradient to **increase** $\beta$.
-
----
 
 #### c. The Update Step (Optimizing $\beta_0$ and $\beta_1$)
 
@@ -208,8 +204,6 @@ $$\frac{\partial L}{\partial \beta_0} = \frac{\partial L}{\partial \hat{p}} \tim
 
 Let's calculate these three partial derivatives one by one.
 
----
-
 #### Step 1: Derivative of Loss w.r.t. Prediction ($\frac{\partial L}{\partial \hat{p}}$)
 
 $$L = -y \ln(\hat{p}) - (1-y) \ln(1-\hat{p})$$
@@ -226,16 +220,12 @@ $$\frac{\partial L}{\partial \hat{p}} = \frac{-y(1-\hat{p}) + \hat{p}(1-y)}{\hat
 $$\frac{\partial L}{\partial \hat{p}} = \frac{-y + y\hat{p} + \hat{p} - y\hat{p}}{\hat{p}(1-\hat{p})}$$
 $$\frac{\partial L}{\partial \hat{p}} = \frac{\hat{p} - y}{\hat{p}(1-\hat{p})}$$
 
----
-
 #### Step 2: Derivative of Prediction w.r.t. z ($\frac{\partial \hat{p}}{\partial z}$)
 
 This is the derivative of the sigmoid function $\sigma(z)$. A unique property of the sigmoid function is that its derivative can be expressed using the function itself.
 
 $$\sigma'(z) = \sigma(z)(1 - \sigma(z))$$
 $$\frac{\partial \hat{p}}{\partial z} = \hat{p}(1 - \hat{p})$$
-
----
 
 #### Step 3: Derivative of z w.r.t. $\beta_0$ ($\frac{\partial z}{\partial \beta_0}$)
 
@@ -244,8 +234,6 @@ Since $z = \beta_0 + \beta_1 x$:
 $$\frac{\partial z}{\partial \beta_0} = 1$$
 
 *(Because $\beta_0$ is just an intercept constant).*
-
----
 
 #### Step 4: Putting it all together (The "Magic" Cancellation)
 
@@ -265,6 +253,7 @@ $$\frac{\partial J}{\partial \beta_0} = \frac{1}{m} \sum_{i=1}^{m} (\hat{p}_i - 
 
 And there is your formula: the gradient of the intercept is simply the **average error** of the predictions.
 
+---
 
 ## 2. How can we interpret the coefficients in Logistic Regression?
 Interpreting the coefficients in logistic regression isn't as straightforward as in linear regression (where they represent a simple slope), but it's incredibly insightful once you understand the concept of **odds**.
@@ -331,8 +320,6 @@ $$\text{OR} = e^{\beta_1}$$
 
 This is why $e^{\beta}$ is the odds ratio. It isolates the effect of a single predictor by showing the multiplicative change in the odds. The other terms all cancel out when you calculate the *ratio* of the odds, leaving you with just the exponentiated coefficient for the variable you're interested in.
 
----
-
 ### How to Interpret the Odds Ratio (OR)
 
 Let's look at the different scenarios for an Odds Ratio:
@@ -390,13 +377,12 @@ You would report this as:
 
 This interpretation is powerful because it allows you to quantify the impact of each predictor on the likelihood of the outcome in a way that is both statistically sound and easy to understand.
 
+---
 
 ## 3. To interpret the coeffients in this way, do we need to scale the features before training the model?
 The short answer is: **No, you do not *need* to scale features to interpret the coefficients as odds ratios. However, whether you *should* scale them depends on your primary goal: direct interpretation vs. model performance and feature comparison.**
 
 Here’s the detailed breakdown of the trade-off:
-
----
 
 ### Case 1: You DO NOT Scale Your Features
 
@@ -413,8 +399,6 @@ This is often preferred when your main goal is **straightforward, intuitive inte
 * **Disadvantage:**
     1.  **Model Convergence:** If your features are on wildly different scales (e.g., `age` from 20-80 and `income` from 20,000-200,000), the gradient descent algorithm used to train the model can struggle and may take longer to converge.
     2.  **Cannot Compare Coefficients:** You **cannot** compare the magnitude of the coefficients to infer feature importance. A coefficient of `0.05` for `income` is not necessarily less important than a coefficient of `1.2` for `number_of_children`, because a "one-unit" change means something completely different for each.
-
----
 
 ### Case 2: You DO Scale Your Features
 
@@ -446,8 +430,9 @@ This is the standard practice when your main goal is **model performance, stabil
     * Build a separate, unscaled model just for the purpose of interpreting the coefficients in their natural units.
     * Translate the "one standard deviation" unit from your scaled model back into its original units for your explanation.
 
+---
 
-## 3. Is Logistic Regression a linear model?
+## 4. Is Logistic Regression a linear model?
 Yes — **logistic regression *is* a linear model**, but the phrase “linear model” refers to something very specific. Once you understand *what* is linear and *where*, the confusion disappears.
 
 Let’s break it down cleanly.
@@ -494,8 +479,9 @@ That’s why logistic regression is both:
 * linear (in parameters / decision boundary)
 * nonlinear (in output probabilities)
 
+---
 
-## 4. If we have more than two classes in our classification problem, can Logistic Regression still be used there?
+## 5. If we have more than two classes in our classification problem, can Logistic Regression still be used there?
 Yes, absolutely!
 
 While the classic form of logistic regression is designed for **binary classification** (two classes), it can be cleverly extended to handle **multiclass classification** problems where you have three or more classes.
@@ -543,8 +529,6 @@ For the same new image, a Multinomial/Softmax model would directly output someth
 
 You again pick the class with the highest probability, which is `Cat`.
 
----
-
 ### Which one is used in practice?
 
 Most modern machine learning libraries, including `scikit-learn`, will automatically handle this for you. If you pass a target variable with more than two classes to `sklearn.linear_model.LogisticRegression`, it will, by default, use the **One-vs-Rest (OvR)** strategy. However, you can explicitly tell it to use **Multinomial Logistic Regression** by setting the `multi_class` parameter:
@@ -554,8 +538,9 @@ Most modern machine learning libraries, including `scikit-learn`, will automatic
 
 In general, the multinomial (Softmax) approach is often preferred as it trains a single, well-calibrated model, but OvR is also very effective and easier to understand.
 
+---
 
-## 5. Elaborate how the softmax based logistic regression works with an example. Use appropriate mathematical formulation as required.
+## 6. Elaborate how the softmax based logistic regression works with an example. Use appropriate mathematical formulation as required.
 Let's Assume we're trying to use multinomial logistic regression to predict whether a person would like one of these three flavours of ice creams: vanilla, chocolate or strawberry. Let's also assume our independent variables are age, and gender. Here is how the log-odds equations for our ice cream preference model would be structured in multinomial logistic regression.
 
 A key concept in multinomial logistic regression is the use of a **reference category**. The model calculates the log-odds of an outcome for each category *relative to this reference category*.
@@ -577,8 +562,6 @@ Since we have 3 classes (Vanilla, Chocolate, Strawberry) and Vanilla is our refe
 
 Each equation will have its own unique set of coefficients (an intercept $\beta_0$, a coefficient for age $\beta_1$, and a coefficient for gender $\beta_2$).
 
----
-
 #### Equation 1: Log-Odds of Preferring Chocolate vs. Vanilla
 
 This equation models the logarithm of the odds that a person prefers Chocolate over Vanilla.
@@ -588,8 +571,6 @@ $$\ln\left(\frac{P(\text{Chocolate})}{P(\text{Vanilla})}\right) = \beta_{0, \tex
 * **$\beta_{0, \text{choc}}$ (Intercept):** The baseline log-odds of preferring Chocolate over Vanilla for a male (`Gender=0`) of age 0.
 * **$\beta_{1, \text{choc}}$ (Age Coefficient):** The change in the log-odds of preferring Chocolate over Vanilla for each one-year increase in age, holding gender constant.
 * **$\beta_{2, \text{choc}}$ (Gender Coefficient):** The change in the log-odds of preferring Chocolate over Vanilla if the person is female, compared to being male, holding age constant.
-
----
 
 #### Equation 2: Log-Odds of Preferring Strawberry vs. Vanilla
 
@@ -675,8 +656,9 @@ $$P(\text{Chocolate}) = \frac{e^{Z_{\text{choc}}}}{e^{Z_{\text{van}}} + e^{Z_{\t
 
 This demonstrates that the probability for any given class is the exponentiated score for that class divided by the sum of the exponentiated scores for **all** possible classes, including the reference category. This is exactly how the sigmoid function is a special case of the softmax function when there are only two classes.
 
+---
 
-## 6. What is the connection between binary Logistic Regression and a Neural Network?
+## 7. What is the connection between binary Logistic Regression and a Neural Network?
 The connection is very direct:
 
 **A binary logistic regression model is mathematically equivalent to a neural network with a single neuron.**
@@ -712,8 +694,9 @@ The power and complexity of "deep learning" come from what happens when you star
 
 So, understanding logistic regression is a fantastic starting point for understanding neural networks, because a neural network is essentially a collection of these logistic regression-like units, stacked in clever ways to solve much more difficult problems.
 
+---
 
-## 7. What should we do if the training data for a Logistic Regression model are imbalanced?
+## 8. What should we do if the training data for a Logistic Regression model are imbalanced?
 That's a critical and very common problem in real-world machine learning. If your training data is imbalanced (e.g., 90% "yes" and 10% "no"), a standard logistic regression model will perform poorly, and you need to take specific actions to handle it.
 
 Here’s why it's a problem and what you should do about it.
@@ -783,8 +766,9 @@ This approach involves modifying the training dataset to make it balanced before
 3.  **If performance is still not good enough, move to Step 3:** Use a library like `imbalanced-learn` in Python to apply **SMOTE** to your training data.
 4.  **Combine techniques:** You can sometimes get the best results by combining SMOTE with class weighting.
 
+---
 
-## 8. Can Logistic Regression solve the XOR problem?
+## 9. Can Logistic Regression solve the XOR problem?
 The answer is **no, a standard logistic regression model cannot solve the XOR problem.**
 
 Here’s a clear explanation of why.
@@ -835,10 +819,10 @@ This very limitation is what led to the development of more complex models. The 
 2.  **Kernel SVMs:** A Support Vector Machine (SVM) using a non-linear kernel (like the Radial Basis Function or Polynomial kernel) can project the data into a higher dimension where a separating hyperplane (the equivalent of a line) can be found.
 3.  **Feature Engineering:** You could manually create a new feature, `X₃ = X₁ * X₂`. If you add this feature to your logistic regression model, it can then find a linear boundary in this new 3D space to solve the problem.
 
+---
 
-## 9. What's the equation of the decision boundary for a Logistic Regression Model?
+## 10. What's the equation of the decision boundary for a Logistic Regression Model?
 **Logistic regression is a linear classifier**, which means it finds a **linear decision boundary** to separate two classes.
-
 
 ### How it Works
 
@@ -862,8 +846,9 @@ Imagine you have two features, $\text{x}_1$ and $\text{x}_2$. The logistic regre
 
 **Key Point:** Even though the output of the logistic regression model is a non-linear S-shaped (sigmoid) curve that represents probability, the actual boundary it creates in the feature space is always linear. This is why it cannot solve problems like the XOR problem, where the classes are not linearly separable.
 
+---
 
-## 10. What will happen if we use MSE loss instead of CE loss in Logistic Regression? Why shouldn't we use MSE loss here?
+## 11. What will happen if we use MSE loss instead of CE loss in Logistic Regression? Why shouldn't we use MSE loss here?
 To understand this, we have to look at **Maximum Likelihood Estimation (MLE)**. In statistics, we don't just pick a loss function randomly. We usually pick the loss function that *maximizes the likelihood* of our data, assuming the data comes from a specific distribution.
 
 ### 1. Why MSE implies a Normal (Gaussian) Distribution
@@ -937,8 +922,9 @@ If you use Cross-Entropy with Sigmoid:
 | **MSE** | **Normal (Gaussian)** <br> Errors are bell-curved noise around the mean. | Continuous ($-\infty, \infty$) | **Wrong.** Labels (0/1) are not continuous. Causes vanishing gradients. |
 | **Cross-Entropy**| **Bernoulli (Binomial)** <br> Errors are probability misses on discrete events. | Discrete (0 or 1) | **Correct.** Aligns with the binary nature of the data and optimizes efficiently. |
 
+---
 
-## 11. Explain why minimizing MSE is mathematically identical to Maximum Likelihood Estimation (MLE) under the assumption of Gaussian noise.
+## 12. Explain why minimizing MSE is mathematically identical to Maximum Likelihood Estimation (MLE) under the assumption of Gaussian noise.
 Here is the step-by-step derivation showing how minimizing MSE is mathematically identical to Maximum Likelihood Estimation (MLE) under the assumption of Gaussian noise.
 
 ### 1. The Assumption: Linear Regression with Gaussian Noise
@@ -1014,8 +1000,9 @@ The term above is exactly the **Sum of Squared Errors**. If we divide by $m$, it
 
 Therefore, minimizing the MSE is mathematically identical to maximizing the probability of the data, **if and only if you assume the errors are distributed Normally.**
 
+---
 
-## 12. Explain why we cannot solve for $\beta$ by setting the gradient to 0.
+## 13. Explain why we cannot solve for $\beta$ by setting the gradient to 0.
 You have spotted what looks like a paradox, but it is actually the crucial distinction between **finding the derivative** and **solving the equation**.
 
 It is **not** contradictory. Here is the nuance:

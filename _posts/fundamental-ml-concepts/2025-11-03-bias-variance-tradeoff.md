@@ -49,8 +49,6 @@ In machine learning, the "bullseye" is the true underlying pattern in the data t
   * **Irreducible Error:** Natural randomness in the data that no model can ever eliminate.
   * Our job is to find the model complexity that minimizes the sum of Bias² and Variance.
 
------
-
 ### A Practical Example: Predicting House Prices
 
 Let's say we want to build a model to predict the price of a house based on its features (size, number of bedrooms, location, age, etc.).
@@ -76,6 +74,7 @@ Let's say we want to build a model to predict the price of a house based on its 
   * **What the model learns:** It learns that price generally increases with size and number of bedrooms, decreases with age, and is heavily dependent on location.
   * **The Result (Good Balance):** This model makes some small errors on the training data (it has a little bias), but it successfully captures the main trends. When shown new data, it makes sensible and reliable predictions. It generalizes well because it has managed the tradeoff between being too simple and too complex.
 
+---
 
 ## 2. Let's define the interplay between bias and variance with mathematical rigor.
 Of course. This is a classic and very elegant proof in statistical learning theory. The goal is to show how the Mean Squared Error (MSE) of a model can be decomposed into three fundamental components: Bias, Variance, and an irreducible error term.
@@ -99,8 +98,6 @@ First, we need to define our terms and the underlying assumptions:
 Our goal is to decompose the **Expected Mean Squared Error** for a given point $x$. The expectation $E[\cdot]$ is taken over many different training sets, which is why our model's prediction $\hat{f}(x)$ is considered a random variable.
 
 $$MSE = E[(y - \hat{f}(x))^2]$$
-
----
 
 ### 2. The Derivation
 

@@ -23,8 +23,6 @@ While there are several types of decision trees (like ID3 or C4.5), the modern s
 
 Crucially, CART trees create **binary splits**. This means every question must have exactly two answers (Yes/No, True/False, or Less than/Greater than). Even if a category has three options (e.g., Action, Comedy, Drama), CART won't split it three ways at once. It will ask something like: "Is it Action vs. NOT Action (Comedy/Drama)?"
 
----
-
 ### 2. The Dataset: The Movie Night Dilemma
 
 To understand the math, we need data. Let's try to predict two things: whether we will **Watch** a movie (Classification) and what **Rating** (out of 10) we might give it (Regression).
@@ -53,8 +51,6 @@ Here is our dataset of 15 movies:
 * Total Samples ($N$): 15
 * Watched = Yes: 9 ($p_{yes} = 9/15 = 0.6$)
 * Watched = No: 6 ($p_{no} = 6/15 = 0.4$)
-
----
 
 ### 3. The Algorithm Step-by-Step (Defining the Math)
 
@@ -96,8 +92,6 @@ $$Variance(S) = \frac{1}{N} \sum_{j=1}^{N} (y_j - \bar{y})^2$$
 *Where $y_j$ is an individual target value and $\bar{y}$ is the mean of values in that node.*
 
 The goal in regression is to maximize **Variance Reduction**, calculated exactly the same way as Information Gain above, just replacing entropy/gini with variance.
-
----
 
 ### 4. Running the Algorithm (Exact Calculations)
 
@@ -167,8 +161,6 @@ Let's assume after checking everything, the best first split is **Duration < 117
 
 The process stops when a node is 100% pure, or we hit a predefined limit (like maximum depth).
 
----
-
 ### 5. Inference: Making Predictions
 
 We have a trained tree. A new movie comes along: *Lead Actor: Keanu Reeves, Genre: Sci-Fi, Duration: 110.*
@@ -185,8 +177,6 @@ We drop the data point down the tree. It passes through decision nodes based on 
 **Regression Inference ("Rating")**
 The process is identical, but the final prediction is different.
 If the new movie lands in a leaf node that contains training movies with ratings of [8.5, 9.0, 8.0], the prediction is the **average**: $(8.5+9.0+8.0)/3 = \textbf{8.5}$.
-
----
 
 ### 6. Overfitting: The Curse of the Decision Tree
 
@@ -207,8 +197,6 @@ We prevent this using **Regularization** (constraints) or **Pruning**.
 **2. Post-Pruning (Cleaning up afterward):**
 Grow the tree to its maximum extent, then start from the bottom and cut off (prune) branches that don't provide significant predictive power on a validation set (Cost-Complexity Pruning).
 
----
-
 ### 7. Decision Boundaries
 
 How does a decision tree view the world?
@@ -218,8 +206,6 @@ Because every split is a hard binary threshold on a single feature (e.g., Durati
 If you plotted "Duration" vs. another numerical feature, the decision boundary wouldn't be a smooth curve or a diagonal line. It would look like a series of stairs or rectangular boxes.
 
 While individual boundaries are linear (straight lines), the combination of many such splits allows the tree to approximate highly **non-linear** relationships.
-
----
 
 ### 8. Determining Variable Importance
 
@@ -231,8 +217,6 @@ If "Duration" was used three times in the tree, and those splits cleaned up the 
 
 In our movie example, if Duration splits consistently separated "Yes" from "No" better than Actor, Duration would have a higher variable importance score.
 
----
-
 ### 9. Handling Missing Data
 
 What if we don't know the duration of a movie?
@@ -242,8 +226,6 @@ What if we don't know the duration of a movie?
 **Theoretical Approaches (used in other algorithms like C4.5 or XGBoost):**
 * **Surrogate Splits:** If the primary split feature is missing for a row, use the feature that is most correlated with the primary feature as a backup to decide going left or right.
 * **During Training:** When calculating IG, ignore missing values. When a missing value is encountered at a split node, send it down *both* paths with reduced weights proportional to the data distribution in the child nodes.
-
----
 
 ### 10. Handling Imbalanced Datasets
 
@@ -256,15 +238,12 @@ A decision tree loves this. It can achieve 93% accuracy immediately by just havi
 2.  **Resampling:** Before training, either **undersample** the majority class (keep only 1 "Yes") or **oversample** the minority class (duplicate the 1 "No" movie 13 times) so the dataset is balanced.
 
 ---
----
 
 ## Welcome to the Jungle
 
 This continues our deep dive into tree-based algorithms. Having mastered the Decision Tree, you might be thinking: "If one tree is good, surely a whole forest is better?"
 
 You are absolutely right. Welcome to the **Random Forest**.
-
----
 
 ### 11. Motivation: The Wisdom of Crowds
 
@@ -273,8 +252,6 @@ We established that a single Decision Tree is prone to **overfitting**. It’s l
 A **Random Forest** is the machine learning equivalent of asking 100 friends for a recommendation and going with the majority vote. While one friend might be biased or wrong, the "wisdom of the crowd" usually converges on the correct answer.
 
 By combining many individual trees, we create a model that is more robust, stable, and accurate than any single constituent tree.
-
----
 
 ### 12. Ensemble, Bagging, and The Bias/Variance Trade-off
 
@@ -294,8 +271,6 @@ Mathematically, if you have $B$ independent random variables (trees) each with v
 While trees in a forest aren't perfectly independent (they are trained on similar data), the randomization attempts to decorrelate them as much as possible, driving the variance down.
 
 ![Image of random forest architecture](assets/img/tree-based-models/random-forest.jpg)
-
----
 
 ### 13. The Training Algorithm: Controlling the Chaos
 
@@ -320,8 +295,6 @@ The bounding of features is the "secret sauce." Common defaults are:
 * **Classification:** $m \approx \sqrt{P}$
 * **Regression:** $m \approx P/3$
 
----
-
 ### 14. Inference: Making Predictions
 
 Once we have trained our forest of trees $\{T_1, T_2, ..., T_B\}$, inference is simply an aggregation process. Let $x$ be a new input vector (a new movie).
@@ -341,8 +314,6 @@ We can use "Hard Voting" or "Soft Voting."
 * **Soft Voting (Averaged Probabilities):** This is generally preferred. Let $p_b(c \vert x)$ be the probability that tree $b$ assigns to class $c$. We average the probabilities across all trees and pick the class with the highest average.
 
     $$\hat{y} = \operatorname*{argmax}_c \left( \frac{1}{B} \sum_{b=1}^{B} p_b(c|x) \right)$$
-
----
 
 ### 15. Bootstrapping and Out-of-Bag (OOB) Score
 
@@ -373,8 +344,6 @@ This gives us a superpower: **Built-in Validation.**
 For every specific row in our dataset, there are several trees in the forest that *never saw that row* during training. We can push that row down *only* those specific trees to get a prediction.
 
 The **OOB Score** is the aggregated accuracy (or $R^2$) of these predictions. It acts as a proxy for cross-validation without the need to explicitly set aside a test set.
-
----
 
 ### 16. Feature Importance via OOB (Permutation Importance)
 
@@ -428,8 +397,6 @@ We reset the data and this time shuffle the "Day of Week" column.
 * **Importance Score:** $100\% - 100\% = \mathbf{0\%}$ (No Drop = Useless Feature)
 
 By measuring how much the model "panics" when a feature is broken, we learn how heavily it relied on it.
-
----
 
 ### 17. Decision Tree vs. Random Forest: The Showdown
 

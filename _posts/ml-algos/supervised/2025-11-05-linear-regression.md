@@ -121,6 +121,7 @@ $\theta = (X^T X)^{-1} X^T y$
 
 This equation gives a direct, analytical solution for the optimal $\theta$, provided that the matrix $(X^T X)$ is invertible. If $(X^T X)$ is not invertible (i.e., it is singular), it could be due to redundant features (linear dependence) or having more features than training examples. In such cases, techniques like regularization can be used.
 
+---
 
 ## 2. What if the matrix $(X^T X)$ is not invertible?
 This is a critical issue in practical applications of linear regression. When the matrix $X^T X$ is not invertible (it is singular or ill-conditioned), the normal equation $\theta = (X^T X)^{-1} X^T y$ cannot be solved directly because the inverse $(X^T X)^{-1}$ does not exist. This situation indicates that there isn't a unique solution for the parameter vector $\theta$ that minimizes the cost function.
@@ -185,6 +186,7 @@ Many numerical computing libraries, such as NumPy in Python (`numpy.linalg.pinv`
 
 In practice, **regularization** is often the preferred method in machine learning because it is robust, computationally stable, and helps to build models that generalize better to new data. The **Moore-Penrose pseudoinverse** is a powerful mathematical tool that is also a perfectly valid and effective solution.
 
+---
 
 ## 3. How does L2 regularization guarantee that the matrix $(X^T X + \lambda I)$ is always invertible?
 The guarantee that $(X^T X + \lambda I)$ is invertible lies in the mathematical properties of the matrices and the effect that adding a scaled identity matrix has on them. The explanation involves a few key concepts from linear algebra, primarily focused on **eigenvalues**.
@@ -267,6 +269,7 @@ This proves that **every eigenvalue of the regularized matrix $(X^T X + \lambda 
 
 In essence, the addition of the "ridge" term $\lambda I$ pushes every eigenvalue (including any that were zero) into the positive part of the number line, thereby resolving the singularity problem.
 
+---
 
 ## 4. How would the normal equation look like if we had used lasso regression?
 The straightforward answer is: **Lasso regression does not have a "normal equation"** in the way that Ordinary Least Squares or Ridge Regression do. There is no simple, closed-form analytical solution to find the optimal coefficients.
@@ -328,8 +331,10 @@ Common methods include:
 * **Subgradient Methods:** These are a generalization of gradient descent that can be used for non-differentiable functions. Instead of a gradient, they use a "subgradient," which provides a direction for the update.
 * **Least Angle Regression (LARS):** This is a clever and efficient algorithm that is closely related to Lasso. In some cases, it can compute the entire path of Lasso solutions for every possible value of $\lambda$.
 
+---
 
 ## 5a. Explain Multicollinearity, its consequences and how to treat it.
+
 ### The Problem: What is Multicollinearity?
 
 **Multicollinearity** is when two or more of your *independent features* (X variables) are highly correlated with *each other*.
@@ -407,6 +412,7 @@ This is the most critical part of the answer. You **do not** remove all features
 
 This iterative removal process is the standard, robust way to use VIF to remove linearly dependent variables.
 
+---
 
 ## 5b. How does L2 regularization help tackling multi-collinearity in linear regression if we want to keep all the features?
 To understand how L2 regularization (Ridge) fixes multicollinearity, we first need to understand *why* multicollinearity breaks standard Linear Regression (Ordinary Least Squares - OLS).
@@ -429,8 +435,6 @@ If the true relationship is $y = 1 \cdot x_1$ (Price = 1 * SqFt), the model has 
 
 In the presence of multicollinearity, OLS often chooses the third option—**massive positive and negative weights that cancel each other out.** This makes the model incredibly **unstable** (high variance). A tiny bit of noise in the data causes these massive weights to swing wildly.
 
----
-
 ### 2. The Intuitive Fix: L2 Penalizes "Heroes and Villains"
 
 L2 Regularization adds a penalty term to the loss function: **$\lambda \sum \theta^2$**.
@@ -448,8 +452,6 @@ Let's look at our previous example weights under the L2 lens:
 The L2 penalty makes Option B astronomically expensive. The optimization algorithm will aggressively reject those massive canceling weights.
 
 Instead, L2 regularization encourages the model to **share the credit**. It pushes the coefficients toward a stable, balanced distribution where correlated features share the weight, rather than one taking a massive positive value and the other a massive negative value.
-
----
 
 ### 3. The Mathematical Fix: Making the Matrix Invertible
 
@@ -478,6 +480,7 @@ Adding a positive value ($\lambda$) to the diagonal of a matrix is a mathematica
 
 By "beefing up" the diagonal, we stabilize the inversion process. We sacrifice a tiny bit of bias (the solution is no longer the *exact* OLS solution) to gain massive stability (the matrix is now solvable and the coefficients won't explode).
 
+---
 
 ## 5c. Why would the OLS method often choose option 3 (The "Exploding Coefficients" Phenomenon), i.e. massive positive and negative weights that cancel each other out?
 You are asking why the simple optimization algorithm (like Gradient Descent, or the direct solution in OLS) would actively *prefer* a seemingly nonsensical solution like Option 3.
@@ -520,6 +523,7 @@ The model chooses the massive, canceling weights not because they are *better*, 
 
 **L2 Regularization** solves this by adding a "hill" to the flat valley. It tells the optimizer: "You must *also* minimize the size of the weights." This forces the optimizer to the **center** of the flat valley, where the weights are smallest (Option 1 or 2), thus fixing the instability.
 
+---
 
 ## 5d. If we use L1 regularization instead, that'd make one of the coefficients 0 which would solve multi-collinearity. Then why L1 regularization is not a preferred mechanism for dealing with multi-collinearity?
 L1 (Lasso) regularization *does* solve multicollinearity by forcing coefficients to zero, effectively performing feature selection. You are right that it "solves" the problem.
@@ -559,6 +563,7 @@ Multicollinearity often involves features that are highly correlated but **not i
 
 **Conclusion:** L2 is preferred because it handles multicollinearity gracefully by *smoothing* the impact across correlated variables, whereas L1 handles it abruptly by *deleting* variables, often arbitrarily.
 
+---
 
 ## 5e. Explain what is Elastic-Net and the motivation behind its formulation.
 Elastic Net is a powerful and popular regularized regression technique in machine learning that effectively combines the strengths of two other regularization methods: **Lasso (L1)** and **Ridge (L2)**.
@@ -610,6 +615,7 @@ Elastic Net is a particularly good choice in the following scenarios:
 
 In summary, Elastic Net is a flexible and powerful regularization technique that combines the feature selection capabilities of Lasso with the stability of Ridge when dealing with correlated data, making it a go-to choice for many regression problems.
 
+---
 
 ## 6. What are the properties of the estimators in OLS based Linear Regression?
 It's a fundamental question that gets to the very core of why Ordinary Least Squares (OLS), the method that produces the normal equation, is so widely used in statistics and econometrics.
@@ -660,8 +666,6 @@ The Gauss-Markov theorem requires the following assumptions about the error term
     (This means our features don't contain information about the errors).
 
 Now, let's see how these assumptions lead to the OLS estimator being BLUE.
-
----
 
 ### **L: Linear Estimator**
 
@@ -719,6 +723,7 @@ The coefficients obtained from the normal equation are the **"best unbiased esti
 * **Unbiased:** On average, it will correctly estimate the true population parameter **β**.
 * **Best:** It has the smallest variance of all possible linear unbiased estimators, making it the most efficient and precise.
 
+---
 
 ## 7. Explain how the $R^2$ metric can be used to gauge the efficacy of a regression model.
 Let's break down the formulation of R-squared ($R^2$) and, most importantly, how to interpret what it tells you about your regression model.
@@ -781,6 +786,7 @@ While R-squared is very useful, you should be aware of its limitations:
 
 In summary, R-squared is a valuable measure of how well your model's features explain the variation in the target variable, but it should always be interpreted in the context of your specific problem and alongside other metrics.
 
+---
 
 ## 8. If we duplicate the data-points for a linear regression problem and rerun the model, would the previous coefficients change?
 This question gets to the heart of how linear regression models are calculated.
@@ -855,6 +861,7 @@ This is the most important part. While the coefficient values stay the same, you
 | **Model predictions** for a given input | **Confidence Intervals** (Narrow) |
 | **Mean Squared Error (MSE)** | **Overall Statistical Significance** (Inflates) |
 
+---
 
 ## 9. How susceptible is linear regression to outlier values, and how can we mitigate that? 
 This is a critical topic in building reliable machine learning models. The short answer is that standard linear regression is **highly susceptible** to outlier values.
@@ -934,13 +941,13 @@ Here are some popular robust regression algorithms available in libraries like s
 
 In summary, while standard linear regression is fragile, there is a rich set of tools and alternative algorithms available to create models that are much more robust to the presence of outliers.
 
+---
 
 ## 10. How are the generalized Linear models (GLM) different from Vanilla Linear Regression model? Explain with example. 
 A Generalized Linear Model (GLM) is a more flexible and powerful version of a "vanilla" linear regression model. While a standard linear regression assumes the outcome variable is continuous and normally distributed, a GLM can handle various types of outcomes (like binary results or counts) by using a **link function** and assuming a different probability distribution.
 
 In essence, linear regression is just one specific type of GLM.
 
----
 ### Vanilla Linear Regression
 
 A standard linear regression model works under a strict set of assumptions:
@@ -952,7 +959,6 @@ A standard linear regression model works under a strict set of assumptions:
 
 **Classic Example:** Predicting a house price. The price is a continuous number, and we assume it goes up or down linearly with features like square footage.
 
----
 ### Generalized Linear Model (GLM)
 
 A GLM extends this idea by adding two key components, making it far more flexible.
@@ -973,7 +979,6 @@ This allows the model to handle outcomes that have constraints (e.g., must be po
 | **Assumed Distribution** | Normal | Any from the exponential family (Normal, Binomial, Poisson, etc.) |
 | **Relationship** | Models **Y** directly | Models a **transformation of Y's mean** via a link function |
 
----
 ### Example: Modeling Customer Complaints
 
 Let's say a company wants to predict the **number of customer complaints** received per day based on the number of sales made that day.
@@ -1004,13 +1009,12 @@ The exponential function ensures that the predicted number of complaints will **
 
 This is the power of the GLM framework: it extends the simple, interpretable idea of linear relationships to a much wider and more practical range of real-world problems.
 
+---
 
 ## 11. Why does the error term ($\epsilon$) being normally distributed ensure that the output function (y) is also from normal distribution in the linear regression?
 This is due to a fundamental property of normally distributed random variables. The output variable **y** is a sum of a constant and a normally distributed variable, which results in another normally distributed variable.
 
 Let's break it down.
-
-***
 
 ### The Linear Regression Equation
 
@@ -1030,8 +1034,6 @@ So, we can simplify the equation to:
 
 $$y = \text{Constant} + \text{Normal Random Variable}$$
 
-***
-
 ### The Key Mathematical Property
 
 A core property of normal distributions is that if you add a constant to a normally distributed random variable, the resulting new variable is **also normally distributed**.
@@ -1040,8 +1042,6 @@ Adding a constant simply **shifts the mean** of the distribution; it does not ch
 
 **Example:**
 If we have a random variable $\epsilon \sim N(0, \sigma^2)$, and we add a constant `C` to it, the new variable $y = C + \epsilon$ will follow a new normal distribution: $y \sim N(C, \sigma^2)$. The distribution is just shifted so that its center is now at `C` instead of 0.
-
-***
 
 ### Putting It Together
 
@@ -1053,6 +1053,7 @@ Since our output `y` is the sum of the deterministic part (a constant for a give
 
 Therefore, the assumption that the error term is normally distributed directly ensures that the output variable `y` is also normally distributed around the regression line.
 
+---
 
 ## 12. What's the connection between Bayesian Linear Regression and L1/L2 regularization based Linear Regression?
 This is one of the most elegant connections in machine learning. It bridges the gap between **frequentist/optimization** approaches (minimizing a loss function) and **Bayesian/probabilistic** approaches (updating beliefs).
@@ -1063,8 +1064,6 @@ The connection is this: **Regularized Linear Regression is exactly equivalent to
 * **Lasso Regression (L1)** $\iff$ Bayesian Regression with a **Laplace Prior**.
 
 Let's break down the math and the intuition to see exactly how this works.
-
----
 
 ### 1. The Foundation: Bayes' Theorem
 
@@ -1084,8 +1083,6 @@ $$\text{Posterior} \propto \text{Likelihood} \times \text{Prior}$$
 Or, taking the logarithm (which turns multiplication into addition):
 
 $$\log(\text{Posterior}) \propto \log(\text{Likelihood}) + \log(\text{Prior})$$
-
----
 
 ### 2. The Connection to L2 (Ridge Regression)
 
@@ -1115,8 +1112,6 @@ $$J(\beta) = \sum(y - \hat{y})^2 + \lambda \sum \beta^2$$
 
 **Conclusion:** Ridge Regression is simply Bayesian Regression where you assume the weights are normally distributed. The regularization parameter $\lambda$ is inversely related to the variance of that Gaussian prior.
 
----
-
 ### 3. The Connection to L1 (Lasso Regression)
 
 In Lasso regression, we add a penalty term $\lambda \sum \lvert \beta_j \rvert$.
@@ -1143,8 +1138,6 @@ $$J(\beta) = \sum(y - \hat{y})^2 + \lambda \sum |\beta|$$
 
 **Conclusion:** Lasso Regression is simply Bayesian Regression where you assume the weights follow a Laplace distribution.
 
----
-
 ### 4. Why Intuition Matches Reality
 
 This probabilistic view explains the *behavior* we see in these models:
@@ -1160,6 +1153,7 @@ This probabilistic view explains the *behavior* we see in these models:
 | **Ridge (L2)** | Maximize Posterior (MAP) | **Gaussian (Normal)** | We assume weights are likely small and distributed normally around zero. |
 | **Lasso (L1)** | Maximize Posterior (MAP) | **Laplace** | We assume weights are likely to be exactly zero (sparsity). |
 
+---
 
 ## 13. How do we interpret the coefficients in linear regression?
 Interpreting coefficients is the bridge between a mathematical model and real-world actionable insights. However, this interpretation is fragile—it completely relies on specific conditions being met.
@@ -1188,6 +1182,7 @@ If $\beta_0 = 30,000$:
 * **The Interpretation:** "The predicted Price when **all independent variables are zero**."
 * **Reality Check:** Often, the intercept has no physical meaning (e.g., a house with 0 SqFt cannot exist). It is primarily there to anchor the regression line.
 
+---
 
 ## 14. If $\beta_1 \gt \beta_2$, can we say $x_1$ is a more important feature compared to $x_2$?
 **The short answer is NO.**
