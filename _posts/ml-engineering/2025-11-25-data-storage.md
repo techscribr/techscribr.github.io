@@ -1,5 +1,5 @@
 ---
-title: "A Short Primer on Scalable Data Storage for ML Systems"
+title: "A Short Primer on Scalable Data Storage Solutions for ML Systems"
 date: 2025-11-25 12:00:00 +0530
 categories: [ML Platform]
 tags: [ML-Platform]
@@ -205,7 +205,6 @@ Both **Partitioning** and **Indexing** are used in wide-column stores. **Partiti
 
 ---
 
-
 ## Show examples of some 'good' and 'bad' queries for storage systems like BigTable.
 
 This is a fantastic way to understand the limitations and design philosophy of Bigtable. Unlike a relational database, where a simple `SELECT` can be slow due to poor indexing, Bigtable's speed is entirely governed by how efficiently the system can locate and scan data using the **Row Key**.
@@ -288,6 +287,8 @@ Elasticsearch is a distributed search and analytics engine. Its primary purpose 
 * **The Choice:** The primary shard might receive new data, but the isolated replica doesn't know about it. If a user's read request hits that *isolated replica*, the replica will happily serve the *stale data* it has. It doesn't know it's inconsistent.
 * **The Consequence:** The system remains **fully available** for reads, but different users might see slightly different results (stale data) for a short time.
 * **Conclusion:** Elasticsearch is an **AP** system. It prioritizes availability (you can always search) at the cost of "eventual consistency." A search engine or a product catalog, where being 10 seconds out-of-date is acceptable, would use an AP system.
+
+---
 
 ## Explain what are OLTP and OLAP systems.
 
@@ -538,6 +539,7 @@ If you need:
 * **Is it available in GCP?**
   **Yes**, it is a fully managed GCP service known as **Cloud Spanner**.
 
+---
 
 ## Since Google Cloud Spanner is a distributed RDBMS, does it support all 3 properties in CAP theorem?
 
@@ -553,7 +555,5 @@ It doesn't technically violate CAP, but it minimizes the trade-off to a point wh
 2.  **Availability (High Availability):** Google claims 99.999% availability for Spanner. It achieves this through massive redundancy and a highly optimized network.
 3.  **Partition Tolerance (The "Technical" Trade-off):** In the strict CAP sense, Spanner is a **CP** system. If a major network partition occurs (e.g., a fiber cut isolating a continent), Spanner chooses Consistency over Availability. The isolated partition will stop accepting writes to maintain data integrity.
     * **However:** Google's private global network is so redundant that such partitions are exceptionally rare. Thus, in practice, users experience it as a **CA** system that also handles partitioning (P) seamlessly 99.999% of the time.
-
-
 
 So, practically speaking, Spanner is often described as a **CA** database that is effectively **P-tolerant** due to Google's infrastructure, though theoretically, it remains a **CP** system.
