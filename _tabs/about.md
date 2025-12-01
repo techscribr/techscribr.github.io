@@ -15,3 +15,8 @@ I earned my Master’s at IISc Bangalore, diving deep into **Bitcoin’s stabili
 This blog is my cozy corner on the internet where I break down ML/DL concepts with clarity, curiosity, and a little personality. Expect math, intuition, practical takeaways, and the occasional plot twist delivered by real-world data.
 
 If that sounds like your kind of learning vibe — welcome aboard!
+
+---
+
+* [LinkedIn](https://www.linkedin.com/in/sayanbiswas90/) → Where I talk ML  
+* [YouTube](https://www.youtube.com/@cyan_aura) → Where I stop talking ML and start playing guitar
