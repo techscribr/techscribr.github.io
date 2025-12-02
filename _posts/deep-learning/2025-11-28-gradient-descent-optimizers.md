@@ -2,7 +2,7 @@
 title: "Deep Learning Primer: A concise introduction to Backprop and Optimizers"
 date: 2025-11-28 10:00:00 +0530
 categories: [Deep Learning]
-tags: [Deep-Learning]
+tags: [Deep-Learning, Deep-Learning-Primer]
 math: true
 ---
 
