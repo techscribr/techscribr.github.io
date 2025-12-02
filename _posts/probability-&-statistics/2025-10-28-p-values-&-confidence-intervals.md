@@ -1,5 +1,5 @@
 ---
-title: "Statistics: P-values & Confidence Intervals"
+title: "Stats Primer: P-values & Confidence Intervals"
 date: 2025-10-28 12:00:00 +0530
 categories: [Statistics]
 tags: [Statistics]
