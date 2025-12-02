@@ -149,5 +149,5 @@ The Poisson distribution simplifies the problem by focusing on the average rate 
 | **Parameters** | $n$ (trials), $p$ (probability) | $\lambda$ (average rate) |
 | **Number of Trials** | Finite | Effectively infinite |
 | **Probability** | Can be large | Must be very small |
-| **Key Relationship**| As $n \rightarrow \infty$ and $p \rightarrow 0$ | Binomial($n, p$) $\rightarrow$ Poisson($\lambda = n*p$) |
+| **Key Relationship**| As $n \rightarrow \infty$ and $p \rightarrow 0$, Bin($n, p$) $\rightarrow$ Poisson($\lambda = n*p$) | |
    
