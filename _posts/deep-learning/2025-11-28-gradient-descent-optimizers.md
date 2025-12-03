@@ -22,11 +22,11 @@ At its core, a deep learning model is a function approximation machine. It tries
 
 The fundamental equation for updating a weight parameter $w$ is:
 
-$$w_{new} = w_{old} - \eta \cdot \frac{\partial L}{\partial w} =  w_{old} - \eta \cdot \nabla{L(w_t)}$$
+$$w_{t+1} = w_{t} - \eta \cdot \frac{\partial L}{\partial w} =  w_{t} - \eta \cdot \nabla{L(w_t)}$$
 
 Where:
 
-  * $w_{old}$ is the current weight.
+  * $w_{t}$ is the current weight.
   * $\eta$ (eta) is the **learning rate** (step size).
   * $\frac{\partial L}{\partial w}$ is the gradient (derivative of the Loss $L$ with respect to weight $w$ at time-step t).
 
