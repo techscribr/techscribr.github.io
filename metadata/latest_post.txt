@@ -1,1 +1,1 @@
-deep-learning/2025-11-28-gradient-descent-optimizers.md
+deep-learning/2025-11-30-regularization.md

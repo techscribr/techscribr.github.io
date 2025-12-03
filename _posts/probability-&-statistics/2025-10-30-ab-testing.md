@@ -27,6 +27,10 @@ By randomly assigning users to Group A (Control) or Group B (Treatment), you ens
 
 In mathematical terms, randomization allows us to equate the **Simple Difference in Means** with the **Average Treatment Effect (ATE)** without needing complex statistical adjustments.
 
+$$
+\text{ATE} = \mathbb{E}[Y \mid T=1] - \mathbb{E}[Y \mid T=0]
+$$
+
 ### 1.2 When You Can't Randomize: A/B Testing vs. Quasi-Experiments
 
 Sometimes, A/B testing is impossible due to ethical concerns, technical limitations, or the need to analyze historical data. In these "Observational Studies," we cannot assume the treated and untreated groups are identical.
