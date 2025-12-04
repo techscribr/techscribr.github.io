@@ -1,1 +1,1 @@
-deep-learning/2025-12-01-rnn-lstm.md
+deep-learning/2025-12-03-word2vec.md
