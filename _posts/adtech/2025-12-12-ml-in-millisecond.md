@@ -173,12 +173,127 @@ This is the central nervous system of an SSP. For every single ad request, the p
 
 ### 2. Floor Price Optimization
 
-A floor price is the minimum amount a publisher will accept for their ad inventory. Setting this correctly is a high-wire balancing act.
-* **The Problem:** If the floor price is set too high, advertisers won't bid, leaving the ad slot empty (lowering the "fill rate") and generating zero revenue. If set too low, the publisher "leaves money on the table" because advertisers might have been willing to pay more. The goal is to find the "sweet spot" that maximizes revenue.
-* **ML Approach: Bid Distribution Forecasting:** This involves predicting the entire distribution of bids for a given opportunity.
-* **Predictive Modelling:** Models analyze historical bid data to predict the range of likely bids, answering questions like: *"What is the probability of receiving a bid above ₹50 or ₹70?"*.
-* **Optimization Algorithm:** The system uses these distributions to simulate different floor prices and calculates the **Expected Revenue** (Floor Price × Probability of a Winning Bid > Floor Price).
-* **Real-Time Action:** The system sets the floor price that maximizes expected revenue dynamically. For example, the floor for a user in Mumbai on a Saturday night will be significantly higher than for a user in a smaller city on a Tuesday morning.
+A **floor price** is the minimum amount a publisher is willing to accept for showing an ad.
+Setting it correctly is a high-wire balancing act between *certainty* and *upside*.
+
+#### The Problem: Certainty vs. Ambition
+
+Consider a single ad slot on a premium news site.
+
+* If the floor price is set at **₹20**, the slot will almost always be filled - but often cheaply.
+* If the floor is set at **₹100**, the publisher might earn more *per impression*, but many auctions will fail, resulting in **no ad shown at all**.
+
+A missed impression earns **₹0**, which is worse than a low-paying one.
+
+So the real question is not:
+
+> “What is the highest price I can ask for?”
+
+but:
+
+> “At what minimum price does this impression maximize expected revenue?”
+
+#### The ML Framing: Predicting Bidder Behavior
+
+To answer that, SSPs don’t try to predict a single winning bid.
+Instead, they model the **entire distribution of bids** likely to appear for a given impression.
+
+For a specific opportunity (user, page, time, device), the model asks:
+
+* What bids are likely to show up?
+* How many bidders will participate?
+* How does demand vary under similar conditions?
+
+This is known as **bid distribution forecasting**.
+
+#### Predictive Modeling: Estimating the Bid Curve
+
+Using historical auction data (for ad-impressions), SSPs train models to estimate probabilities such as:
+* *P(bid ≥ ₹30)*
+* *P(bid ≥ ₹50)*
+* *P(bid ≥ ₹70)*
+
+Instead of predicting *the winning bid*, SSPs reframe the problem as:
+
+> “Given this context, **will at least one bidder bid above X?**”
+
+That is a **binary classification problem**.
+
+For each threshold (₹30, ₹50, ₹70), we can generate labels:
+
+| Threshold | Label                       |
+| --------- | --------------------------- |
+| ₹30       | 1 (yes, bids ≥ ₹30 existed) |
+| ₹50       | 1                           |
+| ₹70       | 0                           |
+
+Now repeat this across **millions of auctions**.
+
+These probabilities implicitly capture:
+* Demand intensity
+* Advertiser competition
+* Time-of-day effects
+* Geo and device differences
+
+Instead of guessing, the SSP now has a **probabilistic view of demand**.
+
+#### Turning Prediction into a Decision: Expected Revenue
+
+Once the bid distribution is estimated, the optimization step is straightforward.
+
+For each candidate floor price, the SSP computes:
+
+> **Expected Revenue = Floor Price × Probability(at least one bid ≥ Floor Price)**
+
+##### Expected Revenue Derivation
+
+Let: p = P(at least one bid $\ge$ F)
+
+Then:
+* With probability **p**, revenue = **F**
+* With probability **(1 − p)**, revenue = **0**
+
+So the expected revenue **E[R]** is:
+
+```
+E[R] = (F × p) + (0 × (1 − p)) = F × p
+```
+
+For example:
+
+* Floor ₹30 × 90% chance → ₹27 expected revenue
+* Floor ₹50 × 60% chance → ₹30 expected revenue
+* Floor ₹70 × 30% chance → ₹21 expected revenue
+
+Even though ₹70 is higher, it produces *less* expected revenue because too many auctions fail.
+
+The optimal floor here would be ₹50 - not because it’s high, but because it balances **price and fill**.
+
+#### Real-time Action: Floors Adapt to Context
+
+This calculation isn’t static.
+
+The same ad slot behaves very differently depending on context:
+* A user in **Mumbai on a Saturday night**
+* A user in a **Tier-2 city on a Tuesday morning**
+* A sports final vs. a routine news article
+
+The SSP continuously recomputes floor prices in real time using:
+* Fresh auction outcomes
+* Time-based patterns
+* Demand shifts from advertisers
+
+As a result, floor prices become **dynamic**, not fixed numbers.
+
+#### Why this Matters for Publishers
+
+Floor price optimization is one of the most leverage-heavy decisions an SSP makes:
+
+* Small improvements compound across billions of impressions
+* Overly aggressive floors quietly destroy revenue
+* Conservative floors systematically under-monetize premium inventory
+
+The ML system’s job is not to be optimistic or pessimistic - but **calibrated**.
 
 ### 3. Ad Quality and Brand Safety Control
 

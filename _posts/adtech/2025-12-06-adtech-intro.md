@@ -207,7 +207,7 @@ Essentially, ROAS measures the **efficiency** of turning ad spend into GMV. Whil
   * This means for every 1,000 impressions they served, they earned ₹35.
 
 ### The Connection: A Unified Example
-Let's trace a single campaign to see how all three terms relate.
+Let's trace a single campaign to see how all these terms relate.
 
 #### The Setup
 * **Advertiser:** Urban Hiker

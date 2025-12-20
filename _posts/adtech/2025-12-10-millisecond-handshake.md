@@ -26,7 +26,7 @@ An ad tag is **not** the ad itself. It is a snippet of code (usually JavaScript)
 ### The Scenario
 
 * **Who:** Priya, a user in Bengaluru.
-* **Where:** She navigates to **ESPNCricinfo.com** to check the latest scores.
+* **Where:** She navigates to **ESPNCricinfo.com** to check the latest scores on Women's World Cup cricket tournament.
 * **The Goal:** **Nike** wants to show Priya their new Indian Cricket Team jersey.
 
 ### The Step-by-Step Journey
@@ -49,7 +49,7 @@ An ad tag is **not** the ad itself. It is a snippet of code (usually JavaScript)
 
 3. **The First Call:** This triggers a **network request** to the Publisher’s Ad Server (e.g., Google Ad Manager). This request carries critical metadata: the **Ad Unit ID**, the **Website URL**, Priya's **IP address** (location), and her **browser type**.
 
-At this point, the browser knows which slot needs an ad — but not yet where the ad will ultimately come from.
+At this point, the browser knows which slot needs an ad - but not yet where the ad will ultimately come from.
 
 ---
 
@@ -79,9 +79,9 @@ While the Ad Tag is about **Delivery** (the "For Rent" sign in the window), the 
 
 A tracking pixel is a tiny, invisible **1x1 pixel image** placed on pages that signify an event, such as a "Thank You" or "Order Confirmed" page. It acts as an **invisible tripwire**.
 
-1.  **Awareness (Ad Tag):** A user in Bengaluru is Browsing ESPNCricinfo.com. An ad tag fires and delivers an ad for a new pair of Nike running shoes.
-2.	**Consideration (Pixel):** The user clicks the ad and browses the shoe's product page on Nike's website. A ViewContent tracking pixel fires, telling Nike's ad platform that the user is interested.
-3.	**Conversion (Pixel):** The user buys the shoes. They land on the "Order Confirmed" page. A Purchase tracking pixel fires, telling the ad platform that the ad campaign has successfully generated a sale.
+1.  **Awareness (Ad Tag):** A user in Bengaluru is Browsing ESPNCricinfo.com. An ad tag fires and delivers an ad of a Nike jersey for Indian Women's Cricket Team.
+2.	**Consideration (Pixel):** The user clicks the ad and browses the jersey product page on Nike's website. A ViewContent tracking pixel fires, telling Nike's ad platform that the user is interested.
+3.	**Conversion (Pixel):** The user buys the jersey. She lands on the "Order Confirmed" page. A Purchase tracking pixel fires, telling the ad platform that the ad campaign has successfully generated a sale.
 
 **In short:** the ad tag delivers the message, and the tracking pixel reports back on whether the message was successful.
 
@@ -90,14 +90,13 @@ A tracking pixel is a tiny, invisible **1x1 pixel image** placed on pages that s
 When Priya buys the jersey, the browser tries to load a simple `<img>` tag from the advertiser's server:
 
 ```html
-<img height="1" width="1" style="display:none;" 
-src="https://www.facebook.com/tr?id=12345&ev=Purchase&cd[value]=2499.00&cd[currency]=INR" />
-
+<img height="1" width="1" style="display:none;"
+src="https://tracking.nike.com/pixel?event=Purchase&value=2499.00&currency=INR" />
 ```
 
 **What happens technically:**
 * The browser makes a simple GET request to the URL in the `src` attribute.
-* The server (e.g., `facebook.com/tr`) reads the parameters: `ev=Purchase` and `value=2499.00`.
+* The server (e.g. `tracking.nike.com`) reads the parameters: `event=Purchase` and `value=2499.00`.
 * The server logs this event and ties it back to the specific user who originally clicked the ad.
 * The server sends back the invisible 1x1 image to complete the request.
 

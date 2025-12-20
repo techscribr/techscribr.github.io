@@ -84,7 +84,7 @@ Modern AdTech has shifted from separate systems to deeply integrated ones.
 
 ## 5. Waterfall Decision Logic: The Traditional Approach
 
-When an ad request hits the Publisher's Ad Server, it follows a strict hierarchy to decide what to show:
+When an ad request hits the Publisher's Ad Server, it usually follows a strict hierarchy to decide what to show:
   1. **Guaranteed Deals:** "Is there a high-priority contract (like Tata Safari) I must fulfill?".
   2. **Programmatic Auctions:** "If not, can I get a higher price by sending this to an auction via the SSP?".
   3. **House Ads:** If no one bids high enough, the server shows an internal ad (e.g., an Amazon banner for "Amazon Prime") to fill the space for free.

@@ -283,4 +283,4 @@ What changes is not the need for intelligence, but **how carefully that intellig
 
 If you’ve read through all five parts, thank you. This ecosystem is complex, often opaque, and easy to oversimplify, and I hope this series helped demystify how the pieces actually fit together. Hopefully, it was worth your time.
 
-The stack will continue to evolve, but the core questions: trust, value, and decision-making under uncertainty, aren’t going away. If anything, the next chapter of AdTech will be even more interesting than the last.
+The stack will continue to evolve, but the core questions: trust, value, and decision-making under uncertainty, aren’t going away. If anything, the next phase of AdTech’s evolution will be even more interesting than the last.
