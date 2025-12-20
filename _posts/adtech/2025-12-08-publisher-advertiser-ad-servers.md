@@ -1,5 +1,5 @@
 ---
-title: "Introduction to AdTech: Anatomy of the Stack"
+title: "Introduction to AdTech: How Publishers, Advertisers, and Auctions Really Work"
 date: 2025-12-08 17:00:00 +0530
 categories: [AdTech]
 tags: [Ad-Tech]
@@ -24,7 +24,7 @@ Google Ad Manager combines three critical functions into one "brain":
 
 ## 2. Direct Deals vs. Programmatic: Fulfilling the Promise
 
-Large publishers like *The Times of India* or *The Hindu* still sell a significant portion of their inventory through **Direct-Sold Deals** negotiated by human sales teams. The technical "campaign" inside a publisher's ad server is a **delivery campaign** focused on fulfilling these pre-negotiated contracts.
+Large publishers like *The Times of India* or *New York Times* still sell a significant portion of their inventory through **Direct-Sold Deals** negotiated by human sales teams. The technical "campaign" inside a publisher's ad server is a **delivery campaign** focused on fulfilling these pre-negotiated contracts.
 
 | Feature | Advertiser Campaign (DSP) | Publisher Campaign (Ad Server) |
 | --- | --- | --- |
@@ -42,11 +42,34 @@ One of the most fundamental concepts in AdTech is that there are **two types of 
 * **Publisher Ad Server (1st Party):** Used by site owners (e.g., *The Times of India*) to decide which ad to show.
 * **Advertiser Ad Server (3rd Party):** Used by brands (e.g., *Tata Motors*) to host creatives once and run them across hundreds of sites while independently verifying counts .
 
-**The Analogy:** Think of a supermarket chain like BigBasket. The **Publisher Ad Server** is the manager of a single store who decides what goes on the shelf and tracks local sales. The **Advertiser Ad Server** is the brand manager at Nestlé who manages products across *all* supermarket chains and tracks total sales independently to ensure the "source of truth" is consistent.
-
-#### The "Redirect" Mechanics
+### The "Redirect" Mechanics
 
 When the Publisher Ad Server decides to show a Tata Motors ad, it does **not** send the image directly to the browser. Instead, it sends an **Advertiser’s Ad Tag** (a redirect). The browser then makes a *second* call to the Advertiser's Server, which logs the impression and finally delivers the creative. This dual-count system prevents fraud and builds trust between parties.
+
+### The Analogy
+
+Think of a large supermarket ecosystem.
+
+The **Publisher Ad Server** is like the **manager of a single BigBasket store**.
+They decide which products get shelf space in *that store*, when they are displayed, and they record sales *only for that location*.
+
+The **Advertiser Ad Server** is like the **Nestlé brand manager** responsible for KitKat sales *across every supermarket chain* - BigBasket, Reliance, Amazon Fresh, and more.
+Instead of relying on each store’s sales report, the brand manager tracks shipments and sales **from Nestlé’s own systems**, using the *same measurement logic everywhere*.
+
+Why?  
+Because each store:
+* Reports sales slightly differently
+* May apply its own discounts, bundling, or accounting rules
+* Has an incentive to report numbers that favor *their* performance
+
+To understand **how much KitKat actually sold globally**, Nestlé needs **one independent, consistent source of truth** - even if it doesn’t perfectly match every store’s numbers.
+
+That’s exactly why **Advertiser Ad Servers exist**:
+
+* Publishers report what *they* showed and counted
+* Advertisers track delivery and performance independently, using the same rules across all publishers
+
+Both numbers matter - but they serve **different purposes**.
 
 ---
 
@@ -59,7 +82,7 @@ Modern AdTech has shifted from separate systems to deeply integrated ones.
 
 ---
 
-## 5. The Waterfall Decision Logic
+## 5. Waterfall Decision Logic: The Traditional Approach
 
 When an ad request hits the Publisher's Ad Server, it follows a strict hierarchy to decide what to show:
   1. **Guaranteed Deals:** "Is there a high-priority contract (like Tata Safari) I must fulfill?".
@@ -68,8 +91,43 @@ When an ad request hits the Publisher's Ad Server, it follows a strict hierarchy
 
 ---
 
+## 6. Header Bidding: A More Competitive Alternative
+
+The traditional waterfall model works sequentially - but that sequencing is also its biggest limitation. Each demand source is tried **one after another**, meaning high-paying buyers further down the chain may never even see the impression.
+
+**Header bidding changes this.**
+
+Instead of asking demand sources one by one, the publisher exposes the impression to **multiple buyers at the same time**, *before* the Publisher Ad Server makes its final decision.
+
+### How it differs from the waterfall
+
+* **Waterfall:** Demand sources are queried sequentially based on priority.
+* **Header Bidding:** Multiple SSPs and buyers bid in parallel, competing purely on price.
+
+### What changes in practice
+
+1. The user loads the page.
+2. A header bidding mechanism requests bids from multiple SSPs simultaneously.
+3. The highest bid is passed into the Publisher Ad Server as a line item.
+4. The ad server compares:
+   * Guaranteed deals
+   * The winning header bid
+   * House ads
+5. The highest-value option wins.
+
+### Why publishers prefer header bidding:
+
+* **Higher yield:** Every buyer gets a fair chance to bid, increasing competition.
+* **Price transparency:** Decisions are driven by actual bids, not preset priority.
+* **Better market efficiency:** Publishers no longer leave money on the table due to rigid ordering.
+
+Importantly, header bidding does **not** replace the Publisher Ad Server.
+It simply feeds better price signals into it - allowing the final decision to be both **contract-aware** and **market-driven**.
+
+---
+
 ## Conclusion & Continuity
 
 The publisher's stack is a complex machine balancing guaranteed revenue with real-time competition. By integrating SSP functionality and coordinating with advertiser-side ad servers, publishers can maximize their yield while maintaining trust.
 
-In the next article, we’ll dive into the low-level plumbing: **Ad Tags, Tracking Pixels, and the Redirect Loop** that makes the millisecond handshake possible.
+In the [next](https://techscribr.github.io/posts/millisecond-handshake/) article, we’ll dive into **Ad Tags, Tracking Pixels, and the Redirect Loop** that makes the millisecond handshake possible.
