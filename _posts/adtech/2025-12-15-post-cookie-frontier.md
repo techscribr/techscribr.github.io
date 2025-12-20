@@ -59,7 +59,7 @@ This approach scales well - but introduces uncertainty. In a privacy-first world
 
 With third-party cookies gone, the industry shifted toward something more explicit: **user-provided identifiers** - signals that users knowingly share as part of a direct relationship with a publisher or platform.
 
-### Why hashed emails work
+### Why Hashed Emails Work
 
 A hashed email (e.g., SHA-256) allows two independent systems to generate the **same anonymous identifier** without ever sharing the raw email address.
 
@@ -83,7 +83,7 @@ UID2 formalizes the hashed-email idea into a **governed, privacy-aware identity 
 
 At a high level, UID2 separates **identity generation** from **identity usage**.
 
-#### How UID2 works (conceptually)
+#### How UID2 Works (Conceptually)
 
 1. A user logs into a participating publisher using an email address.
 2. With explicit consent, that email is transformed into a **UID2 token**.
@@ -94,7 +94,7 @@ At a high level, UID2 separates **identity generation** from **identity usage**.
 
 This token - not the email or its hash - is what enters the advertising workflow.
 
-#### Why this matters
+#### Why this Matters
 
 UID2 improves on simple hashed emails in several important ways:
 
@@ -112,7 +112,7 @@ UID2 improves on simple hashed emails in several important ways:
 
 In other words, UID2 introduces **lifecycle management** to identity - something cookies and raw hashes never had.
 
-#### How UID2 fits into the auction flow
+#### How UID2 Fits into the Auction Flow
 
 From the perspective of the auction:
 
@@ -130,7 +130,7 @@ Crucially, UID2 does **not** guarantee universal reach. It only works where:
 
 That constraint is intentional.
 
-### A shift in philosophy
+### A Shift in Philosophy
 
 UID2 doesn’t attempt to recreate third-party cookies one-for-one. Instead, it reflects a deeper shift in how identity is treated:
 * From **implicit tracking** to **explicit permission**
@@ -195,7 +195,7 @@ As third-party identity weakens, the industry’s focus is shifting from *who th
 This marks a deeper transition - not just identity replacement, but **identity minimization**.
 Instead of reconstructing individuals across the web, systems increasingly extract meaning from the **moment itself**.
 
-### From user-centric to moment-centric targeting
+### From User-Centric to Moment-Centric Targeting
 
 In an identity-rich world, targeting revolved around persistent user profiles.
 In a post-cookie world, those profiles are incomplete, probabilistic, or absent altogether.
@@ -212,7 +212,7 @@ Modern systems ask:
 
 This is where semantic understanding becomes critical.
 
-### Semantic contextual intelligence
+### Semantic Contextual Intelligence
 
 Earlier contextual targeting relied heavily on keywords - often crude and misleading.
 
@@ -225,7 +225,7 @@ For example, an article discussing *market volatility* and one focused on *finan
 
 In this sense, context becomes a **proxy for intent** - without requiring identity.
 
-### Where LLMs actually fit in the stack
+### Where LLMs Actually Fit in the Stack
 
 LLMs do not replace the real-time ML systems described earlier.
 They are too slow, too expensive, and too opaque for millisecond bidding decisions.
@@ -239,7 +239,7 @@ LLMs are increasingly used to:
 
 These enriched signals then feed into the same lightweight, fast models (GBMs, linear models) that execute under strict latency constraints.
 
-### Assistive intelligence, not bidding intelligence
+### Assistive Intelligence, not Bidding Intelligence
 
 LLMs also reduce friction on the *human* side of the system:
 * Translating natural-language campaign goals into structured targeting rules
@@ -248,7 +248,7 @@ LLMs also reduce friction on the *human* side of the system:
 
 Rather than making bidding decisions themselves, LLMs help align **human intent**, **system configuration**, and **machine optimization**.
 
-### A coherent shift, not a collection of tools
+### A Coherent Shift, not a Collection of Tools
 
 Taken together, these changes reflect a consistent direction:
 * Less reliance on persistent identity

@@ -89,7 +89,7 @@ A publisher is any website or app owner who wants to make money by selling ad sp
   * **Magnite:** Formed from the merger of Rubicon Project and Telaria, it is the largest independent SSP.
   * **OpenX:** Known for its high-scale global exchange and early leadership in header bidding technology.
 
-#### Back to Our Example: Meet **Wanderlust Weekly**
+#### Back to our Example: Meet **Wanderlust Weekly**
 Let's revisit our scenario. The potential customer, Priya, is Browsing a popular travel blog called **Wanderlust Weekly**. This blog is the publisher. The owner of the blog, let's call him Amit, wants to earn revenue from his content by displaying ads.
 
 However, Amit is a writer, not an ad sales expert. It would be impossible for him to manually negotiate with thousands of potential advertisers like **Urban Hiker**. This is where his SSP comes in.
@@ -108,7 +108,7 @@ The primary job of Amit's SSP is to connect his available ad inventory to as man
 
 By connecting to a wide pool of buyers, the SSP creates a competitive environment. More bidders mean higher demand, which drives up the price for Amit's ad space and maximizes his revenue.
 
-##### Step 3: The Real-Time Auction (from the SSP's side)
+##### Step 3: The Real-Time Auction (From the SSP's Side)
 This is the flip side of the process we saw with the DSP. When Priya lands on the "Wanderlust Weekly" homepage, the following happens from the SSP's point of view:
 1. **Impression Becomes Available:** The moment the page starts loading, Amit's SSP recognizes there's an ad impression up for grabs. It gathers the anonymous data about the user (Priya) and the context of the page (a travel blog).
 2. **Sending the Bid Request:** The SSP packages this information and sends out a bid request to the ad exchange. It essentially announces: "I have a premium ad spot on a travel blog about to be seen by a user in Bangalore who is interested in outdoor activities. What am I offered?"

@@ -137,7 +137,7 @@ To detect *unknown* bots, DSPs use an **Isolation Forest** . This model identifi
 
 #### Layer 3: Supervised Classification
 
-For known fraudulent patterns, models like **LightGBM** are trained on datasets from third-party verification partners (e.g., DoubleVerify) to assign each request a "pBot" probability score. If the combined signals cross a threshold, the DSP flags the request as IVT and drops it immediately.
+For known fraudulent patterns, models like **LightGBM** are trained on datasets from third-party verification partners (e.g., DoubleVerify) to assign each request a "pBot" probability score. If the combined signals cross a threshold, the DSP flags the request as IVT (Invalid traffic) and drops it immediately.
 
 ### Conclusion: The Unified Intelligence
 

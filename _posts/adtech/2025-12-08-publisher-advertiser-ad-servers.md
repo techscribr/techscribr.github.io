@@ -99,12 +99,12 @@ The traditional waterfall model works sequentially - but that sequencing is also
 
 Instead of asking demand sources one by one, the publisher exposes the impression to **multiple buyers at the same time**, *before* the Publisher Ad Server makes its final decision.
 
-### How it differs from the waterfall
+### How it Differs from the Waterfall
 
 * **Waterfall:** Demand sources are queried sequentially based on priority.
 * **Header Bidding:** Multiple SSPs and buyers bid in parallel, competing purely on price.
 
-### What changes in practice
+### What Changes in Practice
 
 1. The user loads the page.
 2. A header bidding mechanism requests bids from multiple SSPs simultaneously.
@@ -115,7 +115,7 @@ Instead of asking demand sources one by one, the publisher exposes the impressio
    * House ads
 5. The highest-value option wins.
 
-### Why publishers prefer header bidding:
+### Why Publishers Prefer Header Bidding:
 
 * **Higher yield:** Every buyer gets a fair chance to bid, increasing competition.
 * **Price transparency:** Decisions are driven by actual bids, not preset priority.
