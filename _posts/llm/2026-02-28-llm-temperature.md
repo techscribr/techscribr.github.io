@@ -73,3 +73,72 @@ This is where the true impact of temperature is felt in the generation:
 Temperature doesn't make an LLM "smarter" or "dumber." It is simply a mathematical distortion applied to the model's internal confidence before the dice are rolled.
 
 By understanding the interplay between the Temperature-scaled Softmax and downstream algorithms like Top-P, you can move beyond randomly sliding values until the text looks good, and start engineering your generation pipelines with deterministic precision.
+
+### Appendix: Code for the visualization
+````
+import numpy as np
+import matplotlib.pyplot as plt
+
+def softmax_with_temperature(logits, temperature):
+    """
+    Applies temperature scaling to logits and computes the softmax probabilities.
+    """
+    # Prevent division by zero
+    temperature = max(temperature, 1e-5)
+    
+    # Scale logits by temperature
+    scaled_logits = logits / temperature
+    
+    # Subtract max for numerical stability before exponentiation
+    # (This doesn't change the final probabilities, just prevents overflow)
+    scaled_logits -= np.max(scaled_logits)
+    
+    exp_logits = np.exp(scaled_logits)
+    probabilities = exp_logits / np.sum(exp_logits)
+    
+    return probabilities
+
+# 1. Generate Toy Logits (Vocab size = 100)
+# Real LLM logits usually follow a power law: a few very high scores, many low scores.
+# We create an array from 0 to 99, reverse it, and apply a log curve to simulate this.
+vocab_size = 100
+base_scores = np.linspace(1, 10, vocab_size)[::-1]
+logits = np.log(base_scores) * 5  # Scale up to make the "spike" obvious
+
+# Define the temperatures we want to test
+temperatures = [0.1, 0.5, 1.0, 2.0, 5.0]
+colors = ['#d62728', '#ff7f0e', '#2ca02c', '#1f77b4', '#9467bd']
+
+# 2. Plotting Setup
+plt.figure(figsize=(12, 7))
+
+# Calculate and plot the probability distribution for each temperature
+for temp, color in zip(temperatures, colors):
+    probs = softmax_with_temperature(logits, temp)
+    
+    # We use a line plot over the sorted tokens for clearer visualization
+    # In reality, the x-axis represents individual tokens (Token 0, Token 1, etc.)
+    plt.plot(range(vocab_size), probs, label=f'T = {temp}', color=color, linewidth=2)
+    
+    # Highlight the probability of the #1 most likely token
+    plt.scatter([0], [probs[0]], color=color, s=50, zorder=5)
+
+# Formatting the plot
+plt.title("Effect of Temperature on LLM Probability Distribution", fontsize=16, fontweight='bold')
+plt.xlabel("Token Rank (0 = Most likely token, 99 = Least likely)", fontsize=12)
+plt.ylabel("Probability", fontsize=12)
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.legend(title="Temperature", fontsize=11, title_fontsize=12)
+
+# Annotations for intuition
+plt.annotate('Spiky / Confident\n(Almost deterministic)', xy=(5, 0.9), xytext=(15, 0.8),
+             arrowprops=dict(facecolor='black', shrink=0.05, width=1.5, headwidth=8),
+             fontsize=10, color='#d62728')
+
+plt.annotate('Flat / Random\n(Uniform distribution)', xy=(40, 0.05), xytext=(50, 0.2),
+             arrowprops=dict(facecolor='black', shrink=0.05, width=1.5, headwidth=8),
+             fontsize=10, color='#9467bd')
+
+plt.tight_layout()
+plt.show()
+````
