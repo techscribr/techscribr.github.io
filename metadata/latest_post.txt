@@ -1,1 +1,1 @@
-adtech/2025-12-15-post-cookie-frontier.md
+adtech/2026-02-28-llm-temperature.md
