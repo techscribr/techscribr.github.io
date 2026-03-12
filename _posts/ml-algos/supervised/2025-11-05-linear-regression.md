@@ -103,6 +103,7 @@ Now, we compute the gradient of $J(\theta)$ with respect to $\theta$. We use the
 Applying these rules to our cost function:
 
 $\nabla_\theta J(\theta) = \frac{1}{2m} (2X^T X \theta - 2X^T y + 0)$
+
 $\nabla_\theta J(\theta) = \frac{1}{m} (X^T X \theta - X^T y)$
 
 ### The Normal Equation
@@ -433,7 +434,7 @@ If the true relationship is $y = 1 \cdot x_1$ (Price = 1 * SqFt), the model has 
 * $0 \cdot x_1 + 10.76 \cdot x_2$ (Correct)
 * **$1001 \cdot x_1 - 10760 \cdot x_2$** (Also mathematically "correct" on training data!)
 
-In the presence of multicollinearity, OLS often chooses the third option—**massive positive and negative weights that cancel each other out.** This makes the model incredibly **unstable** (high variance). A tiny bit of noise in the data causes these massive weights to swing wildly.
+In the presence of multicollinearity, OLS often chooses the third option: **massive positive and negative weights that cancel each other out.** This makes the model incredibly **unstable** (high variance). A tiny bit of noise in the data causes these massive weights to swing wildly.
 
 ### 2. The Intuitive Fix: L2 Penalizes "Heroes and Villains"
 
@@ -1143,7 +1144,7 @@ $$J(\beta) = \sum(y - \hat{y})^2 + \lambda \sum |\beta|$$
 This probabilistic view explains the *behavior* we see in these models:
 
 * **Gaussian Prior (Ridge):** A Bell curve is flat at the top. It pulls large weights toward zero, but it doesn't force them *exactly* to zero because the probability density near zero is smooth. This matches Ridge's behavior (shrinkage, but no feature selection).
-* **Laplace Prior (Lasso):** The Laplace distribution has a sharp spike at zero. It places a very high probability mass *exactly* on zero. This explains why Lasso performs **feature selection**—it forces coefficients to become exactly zero because that is the most probable value in the prior.
+* **Laplace Prior (Lasso):** The Laplace distribution has a sharp spike at zero. It places a very high probability mass *exactly* on zero. This explains why Lasso performs **feature selection**, it forces coefficients to become exactly zero because that is the most probable value in the prior.
 
 ### Summary Table
 
@@ -1156,7 +1157,7 @@ This probabilistic view explains the *behavior* we see in these models:
 ---
 
 ## 13. How do we interpret the coefficients in linear regression?
-Interpreting coefficients is the bridge between a mathematical model and real-world actionable insights. However, this interpretation is fragile—it completely relies on specific conditions being met.
+Interpreting coefficients is the bridge between a mathematical model and real-world actionable insights. However, this interpretation is fragile. It completely relies on specific conditions being met.
 
 Here is the breakdown of how to read them and the strict rules required to trust them.
 

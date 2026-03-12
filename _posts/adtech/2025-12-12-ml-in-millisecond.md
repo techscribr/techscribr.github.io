@@ -6,7 +6,7 @@ tags: [Ad-Tech]
 math: true
 ---
 
-In the previous posts, we explored the *plumbing* of AdTech—how ad tags, redirects, pixels, and browsers coordinate to make a single impression possible. But for a data scientist or engineer, the most fascinating part isn’t just that the handshake happens - it’s the **intelligence behind it**.
+In the previous posts, we explored the *plumbing* of AdTech: how ad tags, redirects, pixels, and browsers coordinate to make a single impression possible. But for a data scientist or engineer, the most fascinating part isn’t just that the handshake happens - it’s the **intelligence behind it**.
 
 What makes AdTech unique is not merely the use of Machine Learning, but the fact that **multiple independent models must collaborate inside a single, hard real-time decision window**, often under **50 milliseconds**. Within that tiny slice of time, systems must reason about user intent, value, fraud, budgets, competition, and long-term objectives without the luxury of retries or human intervention.
 
@@ -156,7 +156,7 @@ The challenge is not any single model - but **orchestrating them into one cohere
 
 In our previous deep dive into the DSP's "brain," we looked at how advertisers use machine learning to buy the right impression at the right price. However, the other side of the transaction is equally sophisticated. While a DSP uses ML to buy effectively, a **Supply-Side Platform (SSP)** uses it to sell a publisher’s ad inventory for the highest possible price, ensuring every ad slot reaches its maximum revenue potential.
 
-For an SSP, the core objective is **Yield Optimization**—maximizing total revenue across all impressions. This involves solving several high-stakes engineering and data science challenges in real-time.
+For an SSP, the core objective is **Yield Optimization**: maximizing total revenue across all impressions. This involves solving several high-stakes engineering and data science challenges in real-time.
 
 ### 1. Yield Optimization and Dynamic Allocation
 

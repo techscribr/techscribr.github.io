@@ -415,7 +415,7 @@ This allows Spanner to:
 * Avoid inconsistency due to clock drift
 * Achieve **external consistency** (strongest consistency you can get)
 
-TrueTime is why Spanner can do **global ACID transactions** — something most distributed databases can’t do.
+TrueTime is why Spanner can do **global ACID transactions**, something most distributed databases can’t do.
 
 ### 3. **Synchronous Replication Across Regions**
 

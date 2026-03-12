@@ -40,7 +40,7 @@ To infer causation without randomization, we rely on **Quasi-Experimental method
 * **Difference-in-Differences (DiD):**
     This method compares the *change* in outcomes over time between a treated group and a control group. Instead of comparing the groups directly (which might be different), you compare their trend lines.
     * *Example:* Comparing traffic in a city that launched a marketing campaign vs. a similar city that didn't, before and after the launch.
-    * *The Catch:* It relies on the "Parallel Trends Assumption"—that without the treatment, both groups would have moved in the same way.
+    * *The Catch:* It relies on the "Parallel Trends Assumption", that without the treatment, both groups would have moved in the same way.
 * **Regression Discontinuity Design (RDD):**
     This is used when treatment is assigned based on a strict cutoff (e.g., a scholarship given to students with a GPA above 3.5). RDD compares students just above the cutoff (3.51) to those just below (3.49).
     * *The Logic:* Students right at the margin are likely very similar, so the cutoff acts as a "local" A/B test.
@@ -429,7 +429,7 @@ This demonstrates the formula for the **Family-Wise Error Rate (FWER)**, which i
 $$FWER = 1 - (1 - \alpha)^n$$
 
 ## 6. Permutation Test
-A permutation test works by simulating the null hypothesis—that there is no difference between versions A and B—by repeatedly shuffling the observed data and seeing how often you get a result as extreme as the one you actually saw.
+A permutation test works by simulating the null hypothesis, that there is no difference between versions A and B, by repeatedly shuffling the observed data and seeing how often you get a result as extreme as the one you actually saw.
 
 The fundamental difference is that **z-tests and t-tests are *parametric***, meaning they assume your data follows a specific theoretical distribution (like a normal distribution). A **permutation test is *non-parametric***; it makes no assumptions about the data's distribution because it builds the null distribution directly from your collected data.
 
@@ -448,7 +448,7 @@ Here's the step-by-step process:
 
 5.  **Repeat:** Repeat steps 3 and 4 thousands of times (e.g., 10,000 times). Each time, you get a new "permuted statistic."
 
-6.  **Build the Null Distribution:** The collection of all your permuted statistics forms a distribution centered around zero. This is your empirically-derived null distribution—it shows the range of differences you could expect to see if the treatment had no real effect.
+6.  **Build the Null Distribution:** The collection of all your permuted statistics forms a distribution centered around zero. This is your empirically-derived null distribution. It shows the range of differences you could expect to see if the treatment had no real effect.
 
 7.  **Calculate the P-value:** Finally, you count how many of the permuted statistics are as extreme or more extreme than your original **observed statistic**. This proportion is your p-value.
 
@@ -594,7 +594,7 @@ Confidence intervals (CIs) require estimating the *tails* of the distribution (e
 * **Pre-calculation:** There is no simple formula like the one above, but studies show that for 95% CIs, $B=2,000$ stabilizes the endpoints sufficiently for most data.
 
 #### **3. The "Exact" Limit (When to Stop Simulating)**
-Sometimes your sample size is small enough that you don't need to simulate—you can calculate **every possible permutation**. This is called an "Exact Test."
+Sometimes your sample size is small enough that you don't need to simulate. You can calculate **every possible permutation**. This is called an "Exact Test."
 
 Check the total number of permutations ($N_{perm}$) before you start:
 

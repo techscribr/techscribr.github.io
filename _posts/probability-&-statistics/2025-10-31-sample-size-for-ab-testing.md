@@ -30,7 +30,7 @@ In hypothesis testing, we risk making two types of mistakes. Let's use the fable
 
 ### Statistical Power
 Statistical power is the probability that your experiment will correctly detect a real difference if one exists (Power = $1 - \beta$).
-* A test with high power is like a strong magnifying glass—sensitive enough to spot genuine improvements.
+* A test with high power is like a strong magnifying glass, sensitive enough to spot genuine improvements.
 * The industry standard is **80%**, meaning you accept a 20% chance of missing a real winner (Type II error).
 
 ### The Link to Sample Size

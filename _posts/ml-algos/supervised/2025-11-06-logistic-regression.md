@@ -43,7 +43,7 @@ Log Loss, however, takes the log of the error. $\log(1 - 0.99)$ is a massive num
 **B. Convexity (The Shape of the Bowl)**
 This is the mathematical dealbreaker.
 * If you use MSE with the non-linear sigmoid function, the resulting cost surface becomes "wavy" (non-convex) with many hills and valleys (local minima). Gradient descent would likely get stuck in a valley that isn't the true bottom.
-* **Log Loss** guarantees a **convex** shape (like a perfect bowl). This ensures that no matter where we start our optimization, gradient descent will always slide down to the single, global minimum—the best possible parameters for your model.
+* **Log Loss** guarantees a **convex** shape (like a perfect bowl). This ensures that no matter where we start our optimization, gradient descent will always slide down to the single, global minimum - the best possible parameters for your model.
 
 ### 3. Why we apply MLE and why no closed-form solution is possible
 
@@ -433,7 +433,7 @@ This is the standard practice when your main goal is **model performance, stabil
 ---
 
 ## 4. Is Logistic Regression a linear model?
-Yes — **logistic regression *is* a linear model**, but the phrase “linear model” refers to something very specific. Once you understand *what* is linear and *where*, the confusion disappears.
+Yes, **logistic regression *is* a linear model**, but the phrase “linear model” refers to something very specific. Once you understand *what* is linear and *where*, the confusion disappears.
 
 Let’s break it down cleanly.
 
@@ -457,7 +457,7 @@ Logistic regression takes that linear score (z) and passes it through a **nonlin
 
 $$\hat{y} = \sigma(z) = \frac{1}{1 + e^{-z}}$$
 
-The sigmoid squashes the result into a probability between 0 and 1 — that’s the only nonlinearity.
+The sigmoid squashes the result into a probability between 0 and 1, that’s the only nonlinearity.
 
 So:
 
@@ -465,7 +465,7 @@ So:
 * **Linear in the inputs before the sigmoid** → yes
 * **Final output linear?** → no, because of sigmoid
 
-And that’s okay — the model is still classified as a *generalized linear model (GLM)*.
+And that’s okay, the model is still classified as a *generalized linear model (GLM)*.
 
 ### **What Is NOT Linear About It**
 
@@ -667,7 +667,7 @@ You can think of logistic regression as the fundamental building block of a neur
 
 ### Visualizing the Connection
 
-Imagine a neural network with no hidden layers—just an input layer and a single output neuron. This is exactly what logistic regression is.
+Imagine a neural network with no hidden layers, just an input layer and a single output neuron. This is exactly what logistic regression is.
 
 ### Side-by-Side Comparison
 
@@ -794,7 +794,7 @@ The core of a logistic regression model is a linear equation:
 
 $$\text{z} = \beta_0 + \beta_1 \text{x}_1 + \beta_2 \text{x}_2$$
 
-The model's **decision boundary**—the line where it is uncertain (probability = 0.5)—occurs when `z = 0`. This means the boundary is defined by the equation `β₀ + β₁X₁ + β₂X₂ = 0`, which is the equation of a **straight line**.
+The model's **decision boundary**, the line where it is uncertain (probability = 0.5), occurs when `z = 0`. This means the boundary is defined by the equation `β₀ + β₁X₁ + β₂X₂ = 0`, which is the equation of a **straight line**.
 
 A logistic regression model works by finding the best single straight line to separate the two classes (the 0s from the 1s).
 

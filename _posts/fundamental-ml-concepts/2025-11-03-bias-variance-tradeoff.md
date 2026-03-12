@@ -22,7 +22,7 @@ Imagine you are an archer trying to hit the bullseye of a target. You take sever
 
 2.  **Variance:** Think of variance as how scattered your shots are. It measures the consistency of your aim.
 
-      * **High Variance:** Your shots are all over the place—some high, some low, some left, some right. Your aim is very inconsistent and unpredictable.
+      * **High Variance:** Your shots are all over the place - some high, some low, some left, some right. Your aim is very inconsistent and unpredictable.
       * **Low Variance:** All your shots are tightly clustered together. Your aim is very consistent.
 
 **The Four Scenarios**

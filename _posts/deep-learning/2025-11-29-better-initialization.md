@@ -29,7 +29,7 @@ Deep networks suffer from **Internal Covariate Shift**, where the distribution o
     * *Benefit:* Stabilizes training in sequence models where batch statistics can be noisy or undefined.
 
 ### 3. Residual Connections (Skip Connections)
-As networks get deeper (e.g., 50+ layers), accuracy often saturates and then degrades—not because of overfitting, but because the optimization becomes too difficult (the **degradation problem**).
+As networks get deeper (e.g., 50+ layers), accuracy often saturates and then degrades, not because of overfitting, but because the optimization becomes too difficult (the **degradation problem**).
 
 * **The Technique:** Instead of learning a mapping $H(x)$ directly, the layer learns a residual mapping $F(x) = H(x) - x$. The output becomes $x + F(x)$.
 * **Why it works:** It creates "gradient superhighways." During backpropagation, the gradient can flow essentially unaltered through the skip connection to earlier layers. This drastically reduces the vanishing gradient problem and allows extremely deep networks (like ResNet-152 or GPT-4) to be trainable.

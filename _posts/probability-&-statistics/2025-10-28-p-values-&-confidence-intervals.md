@@ -169,4 +169,4 @@ Here’s what might happen in five hypothetical samples:
 If we repeat this process 100 times, about 95 of the CIs will include the true mean \\$260. The given CI \\$235 to \\$265 from your sample  $(\bar{x} = 250)$ is one such interval, and we’re 95% confident it’s one of the “successful” intervals that captures the true mean.
 
 #### Visualizing the Concept
-Imagine a dartboard where the bullseye is the true mean (\\$260). Each sample’s CI is like a dart throw—most (95%) hit the bullseye (contain \\$260), but some miss. The \\$235 to \\$265 interval is one throw, and we’re 95% confident it’s a hit.
+Imagine a dartboard where the bullseye is the true mean (\\$260). Each sample’s CI is like a dart throw, most (95%) hit the bullseye (contain \\$260), but some miss. The \\$235 to \\$265 interval is one throw, and we’re 95% confident it’s a hit.

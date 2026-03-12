@@ -163,7 +163,7 @@ At 12:32 PM, a user named **Priya** in Bengaluru opens a travel blog called *Wan
 ## 4. Understanding Metrices on Both Sides
 With the SSP acting as the publisher’s gatekeeper and the DSP as the advertiser’s strategic buyer, the technical machinery for the auction is complete. But in this high-frequency market, how do both sides keep score? Because the goals of the advertiser/buyer (minimizing cost) and the publisher/seller (maximizing yield) are inherently different, the industry uses a specific set of standardized metrics to translate these competing interests into a common language of value.
 
-In this section, we’ll break down the "Big Four" metrics — CPM, eCPM, ROAS and RPM, to see how they connect in a real-world campaign.
+In this section, we’ll break down the "Big Four" metrics: CPM, eCPM, ROAS and RPM, to see how they connect in a real-world campaign.
 
 #### CPM (Cost Per Mille)
 * **Definition:** CPM is a pricing model used by advertisers to buy ad inventory. An advertiser agrees to pay a fixed price for every 1,000 impressions of their ad. It is a way to buy media.

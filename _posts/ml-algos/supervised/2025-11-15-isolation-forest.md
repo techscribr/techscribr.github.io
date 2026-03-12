@@ -48,7 +48,7 @@ This produces an **isolation tree**.
 
 * No need for distance or density assumptions.
 * Handles high-dimensional data well.
-* Efficient — works with subsamples, linear time complexity.
+* Efficient: works with subsamples, linear time complexity.
 * Naturally isolates outliers without modeling normal behavior explicitly.
 
 ---

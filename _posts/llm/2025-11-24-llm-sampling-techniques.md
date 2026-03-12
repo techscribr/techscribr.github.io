@@ -20,7 +20,7 @@ These methods aim to find the statistically most probable sequence of text. Ther
 This is the simplest approach. At every step, the model looks at the probability distribution and strictly picks the **#1 most probable token** (argmax).
 
 * **Pros:** It is fast, computationally cheap, and produces very coherent, on-topic text.
-* **Cons:** It kills creativity. It is prone to getting stuck in repetitive loops (e.g., "I am I am I am...") and is "brittle"—one bad word choice early on can derail the whole sentence.
+* **Cons:** It kills creativity. It is prone to getting stuck in repetitive loops (e.g., "I am I am I am...") and is "brittle". One bad word choice early on can derail the whole sentence.
 * **Best For:** Strictly factual tasks like arithmetic, translation, or Q&A where you want the single "correct" answer.
 
 ### **Beam Search**

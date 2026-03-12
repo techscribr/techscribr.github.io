@@ -8,7 +8,7 @@ math: true
 
 ## Mastering Data Drift Detection: Why You Should Switch from KL to JS Divergence
 
-In the high-stakes world of machine learning production systems—especially in domains like **Fraud Detection**—deploying a model is only the beginning. The real challenge begins on Day 2: dealing with the ever-changing nature of the real world.  
+In the high-stakes world of machine learning production systems, especially in domains like **Fraud Detection**, deploying a model is only the beginning. The real challenge begins on Day 2: dealing with the ever-changing nature of the real world.  
 Models are trained on historical data, but they operate on live data. When these two distributions diverge, your model's performance can plummet silently. This phenomenon is known as **Data Drift**.  
 To catch this, MLOps engineers rely on statistical distance metrics. The most famous is **Kullback-Leibler (KL) Divergence**. But is it the best tool for the job? In this post, we'll explore why a modern alternative, **Jensen-Shannon (JS) Divergence**, might be the robust upgrade your monitoring system needs.
 
@@ -64,7 +64,7 @@ Imagine a PayPal-like transaction system processing millions of payments.
 * **The Live Monitor (**$Q$**):** Every hour, a Flink or Spark job calculates the distribution of the *exact same features* from the last hour of live traffic.
 
 The monitor runs a simple test: **IF Distance(P, Q) > Threshold THEN Alert**.  
-If the distance spikes, it means the world has changed—perhaps a new fraud ring is attacking—and the model needs retraining.
+If the distance spikes, it means the world has changed, perhaps a new fraud ring is attacking and the model needs retraining.
 
 #### Example 1: Detecting Data Drift (`P(X)` changes)
 
