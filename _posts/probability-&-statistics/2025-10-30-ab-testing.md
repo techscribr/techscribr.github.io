@@ -198,6 +198,8 @@ This means if our experiment's calculated F-statistic is **greater than 3.35**, 
 ## 4. Chi-squared Test
 The Chi-squared (${\chi^2}$) test is a statistical tool used to determine if there is a significant difference between what you expected to find and what you actually observed in a dataset.
 
+***Note***: For a detailed analysis on Chi-squared distribution, please refer to the appendix.
+
 There are two primary types:
 * **Test for Independence:** Checks if two variables are related or independent of each other.
 * **Goodness of Fit Test:** Checks if a single variable's distribution matches what is expected.
@@ -614,3 +616,285 @@ Check the total number of permutations ($N_{perm}$) before you start:
     * **Hypothesis Test:** Use $B = 1,000$ to $5,000$.
     * **Confidence Interval:** Use $B \geq 2,000$.
 3.  **Check Resources:** If your code takes 1 second to run 1 iteration, 10,000 iterations = ~3 hours. If that's too long, use the precision formula (Section 2A) to find the minimum viable $B$.
+
+## Appendix
+### A. Demystifying the Chi-Squared Distribution
+
+While ANOVA and Chi-Squared tests are practically executed with a few lines of code, understanding the math behind them provides a much stronger grasp of what your A/B test results actually mean. Here is a deep dive into the Chi-Squared ($\chi^2$) distribution.
+
+#### 1. Major Problem Areas Addressed by Chi-Squared
+
+The Chi-Squared distribution isn't just for comparing variations in A/B tests. It is a workhorse in statistics, primarily used when dealing with categorical data or variances. Its major applications include:
+
+* **Test of Independence:** Determining if two categorical variables are related. (e.g., *Does a user's device type affect whether they click the 'Buy' button in our A/B test?*)
+* **Goodness of Fit:** Evaluating if a sample of categorical data matches an expected population distribution. (e.g., *Is the traffic distributed evenly across our 4 test variants, or is our randomization flawed?*)
+* **Test of Homogeneity:** Assessing if different populations share the same distribution for a single categorical variable.
+* **Confidence Intervals for Variance:** Estimating the population variance ($\sigma^2$) for normally distributed data.
+
+#### 2. The Chi-Squared Distribution: Definition and Properties
+
+To understand the Chi-Squared distribution, we have to look back at the Standard Normal Distribution ($\mathcal{N}(0,1)$).
+
+**Definition:**
+If you take a set of $k$ independent, standard normal random variables $Z_1, Z_2, \dots, Z_k$, square each of them, and sum them up, the resulting statistic follows a Chi-Squared distribution with $k$ degrees of freedom.
+
+Mathematically, if $Z \sim \mathcal{N}(0,1)$, then:
+
+$$Q = \sum_{i=1}^{k} Z_i^2 \sim \chi^2(k)$$
+
+**Key Properties:**
+
+* **PDF (Probability Density Function):** The exact shape of the distribution is defined by its degrees of freedom ($k$). For $x > 0$, the PDF is:
+
+$$f(x; k) = \frac{x^{(k/2)-1} e^{-x/2}}{2^{k/2} \Gamma(k/2)}$$
+
+*(Where $\Gamma$ represents the Gamma function).*
+* **Mean:** The expected value is simply the degrees of freedom: $\mathbb{E}[Q] = k$.
+* **Variance:** The variance grows with the degrees of freedom: $\text{Var}(Q) = 2k$.
+* **Geometric Interpretation:** Because it is a sum of *squares*, the Chi-Squared distribution only exists for positive numbers (right-skewed). When $k$ is small (like 1 or 2), the bulk of the area is clustered near zero with a heavy right tail. As $k$ increases, the distribution shifts to the right and becomes more symmetric, eventually approximating a normal distribution (thanks to the Central Limit Theorem!).
+
+#### 3. Derivation of mean and variance
+
+##### The Setup
+Let $Q$ be a Chi-squared random variable with $k$ degrees of freedom. By definition, $Q$ is the sum of $k$ independent, squared standard normal variables:
+
+$$Q = \sum_{i=1}^{k} Z_i^2$$
+
+Where each $Z_i \sim \mathcal{N}(0, 1)$. Because they are standard normal, we know two facts about every $Z_i$:
+
+1. Mean: $\mathbb{E}[Z_i] = 0$
+2. Variance: $\text{Var}(Z_i) = 1$
+
+##### 1. Deriving the Mean: $\mathbb{E}[Q] = k$
+
+We want to find the expected value of $Q$:
+
+$$\mathbb{E}[Q] = \mathbb{E}\left[ \sum_{i=1}^{k} Z_i^2 \right]$$
+
+Because of the linearity of expectation (the expected value of a sum is the sum of the expected values), we can bring the expectation inside the summation:
+
+$$\mathbb{E}[Q] = \sum_{i=1}^{k} \mathbb{E}[Z_i^2]$$
+
+Now, we need to find $\mathbb{E}[Z_i^2]$. We can find this using the standard variance formula: $\text{Var}(X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2$. Rearranging this for $Z_i$:
+
+$$\mathbb{E}[Z_i^2] = \text{Var}(Z_i) + (\mathbb{E}[Z_i])^2$$
+
+Plugging in our known values for a standard normal variable ($\text{Var} = 1$, Mean $= 0$):
+
+$$\mathbb{E}[Z_i^2] = 1 + 0^2 = 1$$
+
+Now substitute this back into our summation:
+
+$$\mathbb{E}[Q] = \sum_{i=1}^{k} 1 = \underbrace{1 + 1 + \dots + 1}_{k \text{ times}} = k$$
+
+##### 2. Deriving the Variance: $\text{Var}(Q) = 2k$
+
+We want to find the variance of $Q$:
+
+$$\text{Var}(Q) = \text{Var}\left( \sum_{i=1}^{k} Z_i^2 \right)$$
+
+Because the $Z_i$ variables are completely independent, the variance of their sum is simply the sum of their variances:
+
+$$\text{Var}(Q) = \sum_{i=1}^{k} \text{Var}(Z_i^2)$$
+
+To find $\text{Var}(Z_i^2)$, we use the variance formula again:
+
+$$\text{Var}(Z_i^2) = \mathbb{E}[(Z_i^2)^2] - (\mathbb{E}[Z_i^2])^2$$
+
+$$\text{Var}(Z_i^2) = \mathbb{E}[Z_i^4] - (\mathbb{E}[Z_i^2])^2$$
+
+We already know from the previous step that $\mathbb{E}[Z_i^2] = 1$.
+To find $\mathbb{E}[Z_i^4]$, we look at the moments of the standard normal distribution. A known property of the standard normal distribution $\mathcal{N}(0, \sigma^2)$ is that its fourth moment is $3\sigma^4$. Since $\sigma = 1$, $\mathbb{E}[Z_i^4] = 3(1)^4 = 3$.
+
+Substitute these back into the variance equation for a single $Z_i^2$:
+
+$$\text{Var}(Z_i^2) = 3 - (1)^2 = 2$$
+
+Finally, substitute this back into our summation for $Q$:
+
+$$\text{Var}(Q) = \sum_{i=1}^{k} 2 = \underbrace{2 + 2 + \dots + 2}_{k \text{ times}} = 2k$$
+
+#### 4. Where Does the Formula $\sum \frac{(O-E)^2}{E}$ Come From?
+
+When you run a Chi-Squared test, you use Pearson's cumulative test statistic:
+
+$$\chi^2 = \sum \frac{(O_i - E_i)^2}{E_i}$$
+
+But how does a formula about Observed ($O$) and Expected ($E$) counts connect to the sum of squared normal variables? Here is the step-by-step intuition:
+
+**Step 1: The Standard Normal Variable**
+Recall the formula to standardize a normal variable (the z-score):
+
+$$Z = \frac{X - \mu}{\sigma}$$
+
+If we square this, we get a Chi-Squared distribution with 1 degree of freedom:
+
+$$Z^2 = \frac{(X - \mu)^2}{\sigma^2}$$
+
+**Step 2: Connecting to Counts**
+In categorical data (like counting clicks vs. non-clicks), our expected count $E$ acts as the mean ($\mu$).
+A fascinating property of counting processes (which often follow a Poisson distribution) is that the **variance is approximately equal to the mean**.
+
+Therefore, if the mean $\mu \approx E$, then the variance $\sigma^2 \approx E$.
+
+**Step 3: Substituting the Terms**
+If we take our squared z-score formula and substitute $X$ with our Observed count ($O$), $\mu$ with our Expected count ($E$), and $\sigma^2$ with $E$, we get:
+
+$$Z^2 \approx \frac{(O - E)^2}{E}$$
+
+**Step 4: Summing the Categories**
+An A/B test has multiple categories or cells (e.g., Variant A Clicks, Variant A No-Clicks, Variant B Clicks, Variant B No-Clicks). Since the total test statistic is the sum of these independent standard normal squares, we sum them across all $k$ categories:
+
+$$\chi^2 = \sum_{i=1}^{k} \frac{(O_i - E_i)^2}{E_i}$$
+
+**The Intuition:**
+We square the difference $(O - E)$ so that negative and positive errors don't cancel each other out. We divide by $E$ to standardize the error. Missing your expected count by 10 is a massive deal if you only expected 5 clicks, but it's statistically meaningless if you expected 10,000 clicks. Dividing by $E$ scales the "surprise" factor perfectly.
+
+### B. The Strange Similarity between Chi-Squared Test and Test with KL-Divergence to measure *Goodness of Fit*
+
+If you think the *Goodness of Fit* test could have been executed via KL-Divergence also, you've a sharp eye for details. The **chi-square goodness-of-fit test and KL divergence are closely related**. In fact, the chi-square test can be viewed as a **second-order approximation to KL divergence**. They come from the same conceptual framework: measuring the **distance between two probability distributions**.
+
+Let’s unpack that.
+
+#### 1. What the Chi-Square Goodness-of-Fit Test Measures
+
+Suppose:
+* Observed counts: ($O_i$)
+* Expected counts: ($E_i = n p_i$)
+
+The chi-square statistic is $\chi^2 = \sum_i \frac{(O_i - E_i)^2}{E_i}$
+
+If we convert counts to empirical probabilities: $\hat{p}_i = \frac{O_i}{n}$, then $E_i = n p_i$.
+
+Substitute into the statistic:
+
+$$\chi^2 = n \sum_i \frac{(\hat{p}_i - p_i)^2}{p_i}$$
+
+So chi-square is essentially a **weighted squared distance between distributions**.
+
+#### 2. KL Divergence Between Distributions
+
+KL divergence between the empirical distribution ($\hat{p}$) and the hypothesized distribution ($p$) is: 
+
+$$D_{KL}(\hat{p} \| p) = \sum_i \hat{p}_i \log \frac{\hat{p}_i}{p_i}$$
+
+This measures how different the two distributions are.
+
+#### 3. The Mathematical Connection
+
+If the empirical probabilities are close to the true ones: $\hat{p}_i \approx p_i$, we can do a **Taylor expansion of the log term**.
+
+##### 3.1: Define the delta
+We define a small deviation: $\delta_i = \hat p_i - p_i$. Then $\hat p_i = p_i + \delta_i$.
+
+##### 3.2: Rewrite the Ratio
+
+The log term becomes:
+
+$$\log\left(\frac{\hat p_i}{p_i}\right) = \log\left(\frac{p_i + \delta_i}{p_i}\right) = \log\left(1 + \frac{\delta_i}{p_i}\right)$$
+
+So KL divergence becomes
+
+$$D_{KL} = \sum_i(p_i + \delta_i) \log \left(1 + \frac{\delta_i}{p_i}\right)$$
+
+##### 3.3: Use Taylor Expansion of log(1+x)
+
+For small $x$: 
+
+$$\log(1+x) = x - \frac{x^2}{2} + \frac{x^3}{3} - ...$$
+
+If $x$ is small we keep the first two terms:
+
+$$\log(1+x) \approx x - \frac{x^2}{2}$$
+
+So,
+
+$$\log\left(1 + \frac{\delta_i}{p_i}\right) \approx \frac{\delta_i}{p_i} - \frac{1}{2}\frac{\delta_i^2}{p_i^2}$$
+
+##### 3.4: Substitute Back Into KL
+
+Now plug this approximation into
+
+$$D_{KL} = \sum_i (p_i + \delta_i) \log\left(1 + \frac{\delta_i}{p_i}\right)$$
+
+So,
+
+$$D_{KL} \approx \sum_i (p_i + \delta_i) \left(\frac{\delta_i}{p_i} - \frac{1}{2}\frac{\delta_i^2}{p_i^2}\right) = \sum_i\left(\delta_i + \frac{1}{2}\frac{\delta_i^2}{p_i} - \frac{1}{2}\frac{\delta_i^3}{p_i^2}\right)$$
+
+##### 3.5: Drop Small Higher-Order Terms
+
+Because deviations are small: $\delta_i^3 \approx 0$.
+
+Also notice: $\sum_i \delta_i = 0$, because both distributions sum to 1. So the ($\delta_i$) term vanishes.
+
+What remains:
+
+$$D_{KL} \approx \frac{1}{2}\sum_i\frac{\delta_i^2}{p_i}$$
+
+##### 3.6: Replace $\delta_i$ and Convert Back to Counts
+
+Recall: $\delta_i = \hat p_i - p_i$
+
+So,
+
+$$D_{KL} \approx \frac{1}{2}\sum_i\frac{(\hat p_i - p_i)^2}{p_i}$$
+
+Empirical probability: $\hat p_i = \frac{O_i}{n}$. Expected probability: $p_i = \frac{E_i}{n}$.
+
+Plugging in gives
+
+$$2nD_{KL} \approx \sum_i \frac{(O_i - E_i)^2}{E_i}$$
+
+which is exactly the **chi-square statistic**.
+
+#### 4. What This Means Conceptually
+
+Both tests measure **how far the empirical distribution is from the hypothesized distribution**.
+
+But they do it differently:
+
+| Method        | Distance Type           |
+| ------------- | ----------------------- |
+| Chi-square    | quadratic approximation |
+| KL divergence | information-theoretic   |
+
+So, $\chi^2 \approx 2n D_{KL}$ for small deviations.
+
+#### 5. Deeper Statistical Connection
+
+The likelihood ratio test for multinomial distributions uses:
+
+$$G = 2 \sum_i O_i \log\frac{O_i}{E_i}$$
+
+This is called the **G-test**. It can be written as:
+
+$$G = 2n D_{KL}(\hat{p} \| p)$$
+
+So the G-test is literally **KL divergence scaled by sample size**.
+
+Interestingly *Chi-square test* and *G-test (KL-based)* are asymptotically equivalent. Both converge to a *chi-square* distribution.
+
+**Why do They Look So Similar?**
+
+Because both arise from the same deeper object: **divergence between distributions**. In fact they are both part of the broader class of **f-divergences**.
+
+#### 6. Closing Thoughts
+
+A nice way to think about it:
+
+* **KL divergence** is the "true" information distance.
+* **Chi-square** is the **quadratic approximation** used for easier analysis.
+
+Historically chi-square came first because it was easier to compute before computers.
+
+**One Elegant Way to Remember It:**
+
+Three related goodness-of-fit statistics:
+
+| Statistic        | Formula             | Interpretation   |
+| ---------------- | ------------------- | ---------------- |
+| Pearson $\chi^2$ | ($\sum (O-E)^2/E$)  | quadratic error  |
+| G-test           | ($2\sum O\log(O/E)$)| KL divergence    |
+| Likelihood ratio | same as G-test      | information loss |
+
+For large samples they give nearly the same result.
