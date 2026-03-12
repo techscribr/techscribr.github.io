@@ -6,6 +6,75 @@ tags: [Statistics]
 math: true
 ---
 
+## Prelude: The Engine of A/B Testing - The Central Limit Theorem (CLT)
+
+Before diving into null hypotheses and p-values, it is helpful to understand the mathematical phenomenon that makes A/B testing possible: the **Central Limit Theorem (CLT)**.
+
+At its core, the CLT describes how the distribution of sample averages behaves when we draw many independent observations from the same distribution. The most powerful takeaway is this: even if the original distribution of your data is not normal, the distribution of the sample mean becomes approximately normal as the sample size grows.
+
+### The Intuition
+
+Fundamentally, each observation contributes a small amount of randomness. When many independent contributions accumulate, their combined effect tends to look Gaussian.
+
+Mathematically, if you draw a large sample $n$, the sample mean $\bar{X}_n$ becomes approximately normal:
+
+$$\bar{X}_n \approx \mathcal{N} \left(\mu, \frac{\sigma^2}{n} \right)$$
+
+### Formal Statement (Classical CLT)
+
+Let $X_1, X_2, \dots, X_n$ be **independent and identically distributed (i.i.d.)** random variables with:
+
+* Mean: $\mathbb{E}[X_i] = \mu$
+* Variance: $\text{Var}(X_i) = \sigma^2 < \infty$
+
+Define the sample mean:
+
+$$\bar{X}_n = \frac{1}{n}\sum_{i=1}^{n}X_i$$
+
+Then as ($n \to \infty$):
+
+$$\frac{\bar{X}_n - \mu}{\sigma/\sqrt{n}} \xrightarrow{d} \mathcal{N}(0,1)$$
+
+where ( $\xrightarrow{d}$ ) means **convergence in distribution**.
+
+### Why It Matters
+
+The CLT explains why normal distributions appear everywhere in statistics and data science. It justifies:
+
+* Confidence intervals
+* Hypothesis testing
+* Approximation of sampling distributions
+* Many statistical models
+
+### Key Conditions
+
+The classical CLT requires:
+
+1. **Independence**
+2. **Identical distribution**
+3. **Finite variance**
+
+There are generalized versions (Lindeberg–Feller CLT) that relax the identical distribution assumption.
+
+Although CLT is often first taught for the **sample mean**, but its reach is much broader. In fact, many common **sample statistics become approximately normal** (after appropriate scaling) because they can be expressed as functions of averages or sums of random variables.
+
+A useful guiding principle is:
+
+> If a statistic can be written as a smooth function of sample averages, then a version of the CLT typically applies (via the **Delta Method**).
+
+This includes:
+
+| Statistic                 | Asymptotically Normal? |
+| ------------------------- | ---------------------- |
+| Sample mean               | ✔                      |
+| Sample proportion         | ✔                      |
+| Sample variance           | ✔                      |
+| Sample standard deviation | ✔                      |
+| Difference of means       | ✔                      |
+| Sample covariance         | ✔                      |
+| MLE estimators            | ✔                      |
+| Quantiles/median          | ✔                      |
+
 ## 1. What is Hypothesis Testing?
 
 Hypothesis testing is a statistical framework used to determine if observed data provides enough evidence to support a specific belief about a population. It involves comparing a sample's metric (like a mean or proportion) against a known value or another sample to see if the difference is "real" or just due to random chance.
