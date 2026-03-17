@@ -1,6 +1,6 @@
 ---
 title: "Beyond A/B Testing: Causal Inference in the Wild (DiD, PSM, and IV)"
-date: 2026-03-19 18:00:00 +0530
+date: 2026-03-18 18:00:00 +0530
 categories: [Statistics]
 tags: [Statistics]
 math: true
