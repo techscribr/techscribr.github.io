@@ -68,7 +68,8 @@ This tells us that we expect this specific student to score a $28.0$, plus or mi
 
 ### DiD Python Simulation
 
-```import pandas as pd
+```
+import pandas as pd
 import numpy as np
 import statsmodels.formula.api as smf
 
@@ -154,6 +155,7 @@ $$Y_{i} = \beta_0 + \beta_1(\text{Treatment}_i) + \epsilon_{i}$$
 * $\epsilon_{i}$ (Error Term): The remaining random variance per student.
 
 ### PSM Python Simulation
+
 ```
 import pandas as pd
 import numpy as np
