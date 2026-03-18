@@ -1,2 +1,2 @@
-latest_post = llm/2026-03-18-ab-testing-did-psm-iv.md
-total_articles = 42
+latest_post = probability-&-statistics/2026-03-20-ab-testing-multi-arm-bandits.md
+total_articles = 43
