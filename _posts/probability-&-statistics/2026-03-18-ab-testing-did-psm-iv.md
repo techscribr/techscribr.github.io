@@ -254,7 +254,7 @@ We use the random voucher to extract the "clean" variation in coaching through t
 ### Stage 1: The "Clean" Push
 **Objective**: Figure out exactly how much the random voucher ($Z$) influences a student's likelihood of hiring the coach ($X$), ignoring everything else.
 
-$$\text{Coach\_Hired}_i = \alpha_0 + \alpha_1(\text{Voucher}_i) + u_i$$
+$$\text{Coach_Hired}_i = \alpha_0 + \alpha_1(\text{Voucher}_i) + u_i$$
 
 Let's look at a concrete example. Suppose out of the 50 kids who didn't get the voucher, 10 of them (20%) had wealthy/motivated parents who paid full price for the coach anyway. But out of the 50 kids who did win the voucher, 35 of them (70%) hired the coach.
 * The base rate ($\alpha_0$) is 0.20 (20%).
@@ -269,7 +269,7 @@ This $\hat{X}$ value is pure. It is completely stripped of "parental wealth" bia
 ### Stage 2: The True Effect
 **Objective**: Calculate how this pure, clean variation ($\hat{X}$) affects the final Batting Average ($Y$).
 
-$$\text{Batting\_Average}_i = \beta_0 + \beta_{IV}(\hat{X}_i) + \epsilon_i$$
+$$\text{Batting_Average}_i = \beta_0 + \beta_{IV}(\hat{X}_i) + \epsilon_i$$
 
 Let's say the average batting score for the Lottery Losers (our 0.20 bucket) is 20 runs. The average score for the Lottery Winners (our 0.70 bucket) is 24 runs.
 
