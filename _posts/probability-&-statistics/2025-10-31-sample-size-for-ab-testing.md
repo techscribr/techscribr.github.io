@@ -203,3 +203,54 @@ If you don't have time to write a simulation script, use the **"Parametric + 15%
 | **Z-test / T-test** | Simple Algebra Formula |
 | **ANOVA / Chi-Square** | Use **G\*Power** or `statsmodels` (Effect Size inputs required) |
 | **Permutation / Bootstrap** | **Simulation Loop** (Generate fake data $\to$ Check Power $\to$ Adjust $n$) |
+
+## 3. What is Sample Ratio Mismatch (SRM)?
+
+When we design an A/B test, we define a target traffic split: most commonly a 50/50 allocation between the Control and Treatment groups. **Sample Ratio Mismatch (SRM)** occurs when the actual, observed traffic split during the experiment deviates from this planned ratio by a statistically significant margin.
+
+For example, if we plan a 50/50 split and run the test until we hit 100,000 total visitors, we expect roughly 50,000 in Control and 50,000 in Treatment. If our final counts are 50,500 in Control and 49,500 in Treatment, it might look like a minor 1% variance. However, at scale, we must prove whether this deviation is just random noise or a symptom of a broken experiment.
+
+### How to Detect SRM: The Chi-Square Test in Action
+
+To prove that the mismatch isn't just random noise, we don't use a standard Z-test or t-test, we use a **Chi-Square Goodness of Fit test**. This test compares our observed counts ($O$) against our expected counts ($E$).
+
+The test statistic is calculated as:
+
+$$\chi^2 = \sum \frac{(O - E)^2}{E}$$
+
+Let’s plug in our example numbers of 100,000 total visitors:
+* **Expected ($E$):** 50,000 Control, 50,000 Treatment
+* **Observed ($O$):** 50,500 Control, 49,500 Treatment
+
+**Step 1: Calculate the Chi-Square value**
+* **Control:** $\frac{(50,500 - 50,000)^2}{50,000} = \frac{500^2}{50,000} = \frac{250,000}{50,000} = 5$
+* **Treatment:** $\frac{(49,500 - 50,000)^2}{50,000} = \frac{(-500)^2}{50,000} = \frac{250,000}{50,000} = 5$
+* **Total $\chi^2$** $= 5 + 5 = \mathbf{10}$
+
+**Step 2: Compare against the Critical Value**
+Because we have 2 categories (Control and Treatment), our Degrees of Freedom ($df$) is $2 - 1 = \mathbf{1}$. 
+
+Now we look at the Chi-Square distribution table for $df=1$:
+* If we use a standard significance level of $\alpha = 0.05$ (95% confidence), the critical value is **3.84**. Since $10 > 3.84$, we would flag this as a significant mismatch.
+* **However, industry standard for SRM is much stricter, typically set at $\alpha = 0.001$ (99.9% confidence).** Why? Because a false positive on an SRM check forces us to throw away an entire experiment, so we want to be absolutely certain it's broken. The critical value for $\alpha = 0.001$ is **10.83**.
+
+**The Verdict:** Because our calculated $\chi^2$ of **10** is *just barely* less than the strict critical value of **10.83** (yielding a p-value of roughly ~0.0015), we would technically fail to reject the null hypothesis at the 0.001 level. We can cautiously proceed with the experiment, but this is a massive warning sign. If the gap widened even slightly (e.g., 50,600 vs 49,400, resulting in $\chi^2 = 28.8$), it would trigger a massive SRM alert, and we would have to invalidate the test.
+
+### The Implications: Why SRM is a Nightmare
+
+If a test triggers a true SRM, **every other statistical calculation in our experiment is instantly invalidated.** We cannot trust our Z-tests, our p-values, or our effect sizes. 
+
+Here is why SRM breaks the experiment:
+
+* **Violation of Randomization:** A/B testing relies on the core assumption of a Randomized Controlled Trial (RCT): that the *only* difference between the two groups is the treatment itself. SRM indicates a systemic bias in how users are being sorted or tracked, meaning the groups are no longer mutually exclusive and unbiased. 
+* **Simpson's Paradox & Survivorship Bias:** If our Treatment variant causes older, slower devices to crash before the tracking pixel fires, our Treatment group will artificially look like it has a higher conversion rate because the lowest-performing users were literally excluded from the data pool. The SRM is the only warning sign that this happened.
+* **False Positives/Negatives:** Because the sample sizes ($N$) are skewed, the standard errors used in our Z-tests will be calculated incorrectly, drastically inflating our Type I or Type II error rates beyond our designed $\alpha$ and $\beta$ thresholds.
+
+### Common Engineering Culprits Behind SRM
+
+In digital adtech and web experimentation, SRM is rarely a math error, it is almost always a telemetry or engineering bug. Common causes we see include:
+
+1.  **Redirect Latency:** If the Treatment requires a heavy client-side redirect, users on slow connections might bounce before the redirect completes and the analytics event fires. Control gets logged, Treatment does not.
+2.  **Tracking Bugs in the Variant:** The new code in the Treatment might inadvertently break the analytics tracking pixel for a specific browser or edge case.
+3.  **Bad Hash Functions:** The randomizer assigning users to groups (usually via hashing a user ID or cookie) might not be uniformly distributed, causing collisions that favor one bucket.
+4.  **Bot Traffic Skew:** Bots often do not manage cookies properly. If a bot gets assigned to Treatment, drops its cookie, and returns, it might get re-assigned, skewing our unique user counts.
