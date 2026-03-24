@@ -28,7 +28,9 @@ $$Y_i = \beta_0 + \beta_1 T_i + \epsilon_i$$
 
 * **$\beta_0$** is the average of our Control group.
 * **$\beta_1$** is the exact absolute lift caused by the Treatment.
-* The p-value the model spits out for $\beta_1$ is the *exact same p-value* you get from a classic t-test. ANOVA is simply this exact same equation expanded to include $T_2, T_3$, etc.
+* The p-value the model spits out for $\beta_1$ is *numerically ideantical to the classic t-test p-value* under these assumptions. 
+
+ANOVA is simply this exact same equation expanded to include $T_2, T_3$, etc.
 
 #### ANOVA with 3 Variants
 Imagine you are running an A/B/C test. You have a **Control**, **Treatment 1**, and **Treatment 2**. 
@@ -81,16 +83,22 @@ When you run a traditional ANOVA, it spits out a single **Global p-value** (from
 *(Note: You still need to be mindful of multiple comparison corrections like Bonferroni when looking at these individual p-values, but the math is all there in one simple GLM output!)*
 
 #### 2-Proportion Z-Tests
-What about our 2-proportion Z-tests for Conversion Rates? That is simply a GLM using a Binomial family and a Logit link: otherwise known as **Logistic Regression**. Our Chi-Square tests for count data? That is a GLM using a Poisson family and a Log link.
+What about our 2-proportion Z-tests for Conversion Rates? That is simply a GLM using a Binomial family and a Logit link: otherwise known as **Logistic Regression**. 
+
+While both approaches test the same underlying hypothesis, the exact p-values may differ slightly in practice due to different estimation methods (e.g., Wald test vs pooled variance approximation), especially in small samples.
+
+Our Chi-Square tests for count data? That is a GLM using a Poisson family and a Log link.
 
 ### 2. Variance Reduction: Supercharging Sample Sizes
 In [Part 4](https://techscribr.github.io/posts/sample-size-for-ab-testing/), we talked about the pain of calculating sample sizes. What if we need to detect a tiny effect, but we simply don't have enough daily traffic? 
 
-By framing our A/B test as a GLM, we unlock a superpower: **Covariate Adjustment** (often referred to in the industry as CUPED). Instead of just looking at the treatment indicator ($T_i$), we can add pre-experiment knowledge about our users into the model:
+By framing our A/B test as a GLM, we unlock a superpower: **Covariate Adjustment** (often referred to in the industry as CUPED - Controlled-experiment Using Pre-Existing Data). 
+
+Instead of just looking at the treatment indicator ($T_i$), we can add pre-experiment knowledge about our users into the model:
 
 $$Y_i = \beta_0 + \beta_1 T_i + \beta_2 X_{i, \text{history}} + \epsilon_i$$
 
-**What exactly is $X_{i, \text{history}}$?** This is our **Covariate**—a measurable piece of data about the user that was recorded *before* the experiment started. It must be a variable that strongly predicts their future behavior but is completely untouched by the A/B test. In e-commerce, the absolute best covariate is the user's historical spend. 
+**What exactly is $X_{i, \text{history}}$**? This is our **Covariate** - a measurable piece of data about the user that was recorded *before* the experiment started. It must be a variable that strongly predicts their future behavior but is completely untouched by the A/B test. In e-commerce, the absolute best covariate is the user's historical spend. 
 
 **Let's look at a practical toy example to see the math in action:**
 Imagine we are testing a new checkout flow designed to increase Average Order Value (AOV). We have two distinct users in our Treatment group:
@@ -110,37 +118,50 @@ Because our raw data bounces wildly between 30 and 510, the overall variance ($\
 
 To get statistical significance, our observed lift (\\$10) needs to be roughly twice as large as the Standard Error. If the natural \\$480 gap between our Whale and our Bargain Hunter pumps the Standard Error up to \\$50, our tiny \\$10 signal is completely drowned out. The math assumes the \\$10 difference is just random noise. The only way to shrink the SE in a standard t-test is to blindly increase $N$ (the sample size) to thousands or millions of users.
 
-#### The GLM Solution: Shrinking the Variance
+#### The GLM Solution: Conditioning on Predictable Variation
 Now, we use our GLM and include $X_{i, \text{history}}$ as a covariate. 
 
-The GLM doesn't calculate variance based on the raw \\$510 and \\$30. Instead, the GLM mathematically calculates how well our covariate ($X$) predicts the outcome ($Y$), represented by the correlation coefficient squared ($R^2$). It then subtracts that predictable baseline from the equation, leaving only the **Residual Variance**:
+The key idea is not that the model simply "ignores" raw variance, but that it **conditions on predictable variation**. It mathematically separates the data into two buckets:
+1.  **Predictable variation** (explained by $X$)
+2.  **Unpredictable variation** (residual noise)
 
-$$\sigma_{\text{residual}}^2 = \sigma^2 \times (1 - R^2)$$
+Formally, the CUPED mechanism performs an adjustment of the form:
 
-Because historical spend ($X = 500$ and $X = 20$) is highly correlated with current spend ($Y = 510$ and $Y = 30$), our $R^2$ is very high (let's say 0.95). 
+$$Y_i' = Y_i - \theta (X_i - E[X])$$
 
-Look at what happens to our new variance:
-$$\sigma_{\text{residual}}^2 = \sigma^2 \times (1 - 0.95) = \sigma^2 \times 0.05$$
+where:
 
-By telling the GLM to account for the $480 gap *before* evaluating the treatment, we just eliminated 95% of the background noise! Our new Standard Error formula becomes:
+$$\theta = \frac{\text{Cov}(Y, X)}{\text{Var}(X)}$$
 
-$$SE(\text{Lift})_{\text{GLM}} \approx \sqrt{\frac{\sigma_{\text{residual}}^2}{N}}$$
+This transformation removes the component of $Y$ that is linearly predictable from $X$, leaving behind a purified, lower-variance signal ($Y_i'$).
 
-Because the numerator is now tiny, our Standard Error plummets. Suddenly, our \\$10 treatment signal is crystal clear, standing tall above the remaining 5% of noise. We can confidently declare our \\$10 lift as statistically significant with a fraction of the original sample size required!
+You can interpret this directly through the lens of our GLM regression: the model explains a massive portion of the variance in $Y$ using $X$, leaving only a much smaller **residual variance**:
+
+$$\sigma_{\text{residual}}^2 = \text{Var}(Y \mid X)$$
+
+Because historical spend ($X$) is highly correlated with current spend ($Y$), most of the wild variation (like that $480 gap between our Whale and Bargain Hunter) is explained away *before* we evaluate the treatment effect.
+
+So, rather than “changing the formula,” we are simply reducing the unexplained variance that feeds into the exact same statistical machinery. Our new Standard Error plummets because it relies on this reduced residual variance:
+
+$$SE(\text{Lift})_{\text{adjusted}} \approx \sqrt{\frac{\sigma_{\text{residual}}^2}{N}}$$
+
+Because the numerator is now tiny, our \\$10 treatment signal becomes crystal clear. We can confidently declare our \\$10 lift as statistically significant with a fraction of the original sample size required!
 
 ### 3. Causal Inference: GLMs Under the Hood
 In [Part 5](https://techscribr.github.io/posts/ab-testing-did-psm-iv/), we tackled situations where we couldn't perfectly randomize our traffic. GLMs were secretly doing all the heavy lifting:
 * **Propensity Score Matching (PSM):** How did we calculate the "statistical twin" probability score to fix selection bias? We ran a Logistic Regression (GLM) where the target was the treatment assignment and the features were the confounders.
 * **Difference-in-Differences (DiD):** We calculated the true causal uplift over time by running a linear model with an interaction term ($\beta_3(\text{Group}_i \times \text{Time}_t)$). If our outcome was a count metric, standard DiD would break, and we’d simply swap our engine to a Poisson GLM.
 
-### 4. Contextual Bandits: The Evolution of GLMs
-Finally, in [Part 6](https://techscribr.github.io/posts/ab-testing-multi-arm-bandits/), we explored Contextual Bandits. We specifically looked at **LinUCB** (Linear Upper Confidence Bound). As the name implies, LinUCB assumes the expected reward is a linear combination of the user's context features. It is literally running a Ridge Regression under the hood to calculate the exploration bonus!
+The GLM provides a flexible estimation framework, but **causal validity comes from assumptions - not the model itself**.
 
-But what if our bandit is trying to optimize Ad Clicks (a binary 0 or 1)? Linear models are bad at predicting bounded probabilities. The industry solution is **GLM-UCB** (Generalized Linear Bandits). We wrap our bandit algorithm in a logistic link function, allowing it to learn a Logistic Regression model on the fly while balancing exploration and exploitation.
+### 4. Contextual Bandits: The Evolution of GLMs
+Finally, in [Part 6](https://techscribr.github.io/posts/ab-testing-multi-arm-bandits/), we explored Contextual Bandits. We specifically looked at **LinUCB** (Linear Upper Confidence Bound). As the name implies, LinUCB assumes the expected reward is a linear combination of the user's context features. It uses a form of regularized linear regression (similar to **Ridge Regression**) to estimate rewards, but crucially augments this with an uncertainty term to drive exploration.
+
+But what if our bandit is trying to optimize Ad Clicks (a binary 0 or 1)? Linear models are bad at predicting bounded probabilities. The industry solution is **GLM-UCB** (Generalized Linear Bandits). We wrap our bandit algorithm in a logistic link function, allowing it to learn a Logistic Regression model on the fly while balancing exploration and exploitation. In practice, these models are updated iteratively and often rely on approximations, making them more complex than a standard "fit-once" GLM, but the underlying statistical structure remains the same.
 
 ### The Final Takeaway
 When we study A/B testing and experimentation, we are usually taught Frequentist statistics. When we study predictive modeling, we are taught Machine Learning. 
 
-Understanding that Generalized Linear Models bridge this gap is a massive leap forward in any Data Scientist's career. When we realize that a t-test, an A/B test variance reduction technique, and a Contextual Bandit are all speaking the same mathematical language, we stop memorizing formulas and start truly mastering the matrix of data.
+Understanding that Generalized Linear Models bridge this gap is a massive leap forward in any Data Scientist's career. When we realize that a t-test, a variance reduction technique, and a Contextual Bandit are all built on the same underlying statistical foundation, we stop memorizing isolated tools and start thinking in terms of a unified modeling framework.
 
 Thank you for joining us on this six-part journey through the world of experimentation! 
