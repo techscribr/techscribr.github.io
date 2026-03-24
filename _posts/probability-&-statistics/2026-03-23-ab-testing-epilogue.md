@@ -165,3 +165,6 @@ When we study A/B testing and experimentation, we are usually taught Frequentist
 Understanding that Generalized Linear Models bridge this gap is a massive leap forward in any Data Scientist's career. When we realize that a t-test, a variance reduction technique, and a Contextual Bandit are all built on the same underlying statistical foundation, we stop memorizing isolated tools and start thinking in terms of a unified modeling framework.
 
 Thank you for joining us on this six-part journey through the world of experimentation! 
+
+### Resources
+* [WTF is variance reduction in A/B testing?](https://www.youtube.com/watch?v=ojewuOMxJ0c)
