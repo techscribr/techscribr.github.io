@@ -21,7 +21,7 @@ Once these mechanics are clear, the more advanced topics - like bidding strategi
 
 ## 1. The Ad Tag: The Browser's Instruction Manual
 
-An ad tag is **not** the ad itself. It is a snippet of code (usually JavaScript) that acts as a set of instructions for the user's browser . Think of it as a recipe that tells the browser exactly where to go and what to do to fetch the actual ad.
+An ad tag is **not** the ad itself. It is a snippet of code (usually JavaScript) that acts as a set of instructions for the user's browser. Think of it as a recipe that tells the browser exactly where to go and what to do to fetch the actual ad.
 
 ### The Scenario
 
