@@ -1,6 +1,6 @@
 ---
 title: "Decoding RAG Evaluation: When Your Pipeline Fails, Who is to Blame?"
-date: 2026-03-26 18:00:00 +0530
+date: 2026-03-26 21:00:00 +0530
 categories: [Deep Learning]
 tags: [LLM]
 math: true
@@ -39,7 +39,7 @@ A user asks, "What were the Q3 revenue, profit, and user growth numbers?" To ful
 * **What it is**: The ratio of required facts successfully retrieved vs. total facts needed to answer the question perfectly.
 * **Calculation**: We needed 3 facts. We found 2 (Revenue and Profit).
 * **Result**: Context Recall = 2 / 3 = 66.6%.
-* **Why it matters**: If Context Recall is low, the Generation phase is guaranteed to fail. The LLM is starved of evidence and forced to either hallucinate or reply "I don't know."
+* **Why it matters**: If Context Recall is low, the Generation phase is guaranteed to fail. The LLM is starved of evidence and forced to either hallucinate or reply "I don't know".
 
 #### Context Precision (How much of what we retrieved was actually useful?)
 * **What it is**: The ratio of relevant chunks retrieved vs. the total number of chunks retrieved.
@@ -140,7 +140,7 @@ A generation failure occurs when you have provided perfect documents in a perfec
 2. **Evasion/Misalignment**: The LLM summarizes the context perfectly but completely misses the point of the user's actual question.
 
 ### How to measure it
-While often used interchangeably to flag hallucinations in basic chatbots, strict evaluation frameworks separate **Faithfulness** and **Groundedness**.
+While often used interchangeably to flag hallucinations in basic chatbots, strict evaluation frameworks separate **Faithfulness** and **Groundedness**, the two key metrics for evaluating the 'generation' quality in LLMs.
 
 Let's imagine the retrieved context says: *"The flagship phone costs $800 and features a titanium frame"*. The user asks: *"Tell me about the new phone"*.
 * **Faithfulness (Consistency)**: Does the answer contradict the provided context? It acts as a negative constraint, measuring loyalty to the source text.
@@ -179,7 +179,7 @@ If the LLM is hallucinating or missing the mark, apply these fixes:
 Building custom evaluation scripts for Context Recall, Faithfulness, and Answer Relevance from scratch is tedious and error-prone. This is where frameworks like **Ragas (Retrieval Augmented Generation Assessment)** come in. Ragas is an open-source library specifically designed to standardize the evaluation of RAG pipelines.
 
 ### How it helps
-Ragas provides out-of-the-box Python functions that take your pipeline's inputs (Question, Retrieved Contexts, Generated Answer, and optionally Ground Truth) and automatically calculates the RAG metrics using the LLM-as-a-judge approach under the hood.
+[Ragas](https://github.com/vibrantlabsai/ragas) provides out-of-the-box Python functions that take your pipeline's inputs (Question, Retrieved Contexts, Generated Answer, and optionally Ground Truth) and automatically calculates the RAG metrics using the LLM-as-a-judge approach under the hood.
 
 ### Benefits of using Ragas
 * **Standardization**: It provides mathematically rigorous definitions for metrics like Context Precision and Faithfulness, ensuring the AI community is measuring success the same way.
