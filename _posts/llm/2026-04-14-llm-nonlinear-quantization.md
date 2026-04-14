@@ -1,6 +1,6 @@
 ---
 title: "Packing Intelligence into Fewer Bits: Non-Linear Quantization in LLMs"
-date: 2026-04-15 19:00:00 +0530
+date: 2026-04-14 19:00:00 +0530
 categories: [Deep Learning]
 tags: [LLM, Quantization]
 math: true
