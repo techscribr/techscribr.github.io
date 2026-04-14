@@ -3,7 +3,7 @@ icon: fas fa-bell
 order: 5
 ---
 
-Get an email whenever a new article is published — no spam, unsubscribe any time.
+Get an email whenever a new article is published - no spam, unsubscribe any time.
 
 <style>
   .followit--follow-form-container[attr-a][attr-b][attr-c][attr-d][attr-e][attr-f] .form-preview {
