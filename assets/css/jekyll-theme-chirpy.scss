@@ -1,0 +1,22 @@
+---
+---
+
+/* prettier-ignore */
+@use 'main
+{%- if jekyll.environment == 'production' -%}
+  .bundle
+{%- endif -%}
+';
+
+/* append your custom style below */
+
+/* Invert avatar in dark mode so black outlines remain visible */
+[data-mode='dark'] #avatar img {
+  filter: invert(1);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-mode]) #avatar img {
+    filter: invert(1);
+  }
+}
