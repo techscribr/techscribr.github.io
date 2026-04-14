@@ -1,2 +1,2 @@
-latest_post = llm/2026-03-26-rag-evaluation.md
+latest_post = llm/2026-04-15-llm-nonlinear-quantization.md
 total_articles = 45

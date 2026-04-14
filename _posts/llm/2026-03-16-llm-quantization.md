@@ -2,7 +2,7 @@
 title: "A Practical Introduction to LLM Quantization and Linear Mapping"
 date: 2026-03-16 18:00:00 +0530
 categories: [Deep Learning]
-tags: [LLM]
+tags: [LLM, Quantization]
 math: true
 ---
 
